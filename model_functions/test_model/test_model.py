@@ -38,8 +38,8 @@ def hello_world(request):
         urllib.request.urlretrieve(url, filename)
 
     # get imagenet labels
-    labels = json.loads(urllib.request.urlopen("https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json").read())
-
+    class_idx = json.loads(urllib.request.urlopen("https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json").read())
+    idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
     # prepare data
     input_image = Image.open(filename)
     preprocess = transforms.Compose([
@@ -52,13 +52,9 @@ def hello_world(request):
     input_batch = input_tensor.unsqueeze(0)
 
     # create prediction
-
     with torch.no_grad():
         output = model(input_batch)
     pred = torch.nn.functional.softmax(output[0], dim=0).cpu().numpy().tolist()
-
-    class_idx = labels
-    idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
 
     top_pred = []
 
