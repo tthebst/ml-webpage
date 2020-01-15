@@ -15,13 +15,14 @@
             <div class="col">
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="inputGroupFile04"
+                        <input type="file" onchange="loadFile(event)" class="custom-file-input" id="inputGroupFile04"
                             aria-describedby="inputGroupFileAddon04">
-                        <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                        <label class="custom-file-label" for="inputGroupFile04" id="choosefile_label">Choose
+                            file</label>
                     </div>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button"
-                            id="inputGroupFileAddon04">Upload</button>
+                        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04"
+                            onclick="image_upload()">Upload</button>
                     </div>
                 </div>
             </div>
@@ -42,7 +43,7 @@
             <div class="col-sm">
                 <h3 class="text-center">Resnet18</h3>
             </div>
-
+            <p><img id="output" width="200" /></p>
 
         </div>
 
@@ -51,7 +52,35 @@
     </div> <!-- /container -->
 
 </main>
+<script>
 
+    function showname() {
+
+    };
+
+    var loadFile = function (event) {
+        //change choose file name to image name
+        var name = document.getElementById('inputGroupFile04').files.item(0).name;
+        document.getElementById("choosefile_label").innerHTML = name;
+
+        //display image in img with id output
+        var image = document.getElementById('output');
+        image.src = URL.createObjectURL(event.target.files[0]);
+    };
+
+
+    function image_upload() {
+        let photo = document.getElementById("inputGroupFile04").files[0];
+        let formData = new FormData();
+        console.log(photo)
+
+        formData.append("photo", photo);
+        fetch('/classification', { method: "POST", body: formData });
+
+
+    }
+
+</script>
 
 
 {% endblock %}
