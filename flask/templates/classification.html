@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<main role="main">
+
+
+    <div class="container ">
+        <!-- Example row of columns -->
+        <div class="row mt-5">
+            <div class="col">
+                <h2 class="text-center">Upload your Picture to classify -></h2>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="inputGroupFile04"
+                            aria-describedby="inputGroupFileAddon04">
+                        <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button"
+                            id="inputGroupFileAddon04">Upload</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row mt-5">
+            <div class="col-sm">
+                <h3 class="text-center">Resnet18</h3>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda debitis enim perspiciatis, iure
+                    suscipit illum est quis beatae, sequi eos eveniet? Itaque voluptates atque odio labore nostrum
+                    debitis, sit ullam!</p>
+
+                <button type="button" class="btn btn-primary">Predict</button>
+            </div>
+            <div class="col-sm">
+                <h3 class="text-center">Resnet18</h3>
+            </div>
+            <div class="col-sm">
+                <h3 class="text-center">Resnet18</h3>
+            </div>
+
+
+        </div>
+
+        <hr>
+
+    </div> <!-- /container -->
+
+</main>
+
+
+
+{% endblock %}
