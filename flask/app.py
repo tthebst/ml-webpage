@@ -14,6 +14,9 @@ def home():
 def classification():
 
     if request.method == "POST":
-        print(request.files)
+
+        imfile = request.files['photo']
+
+        imfile.save("hallo.jpg")
 
     return render_template('classification.html')

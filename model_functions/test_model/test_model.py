@@ -30,12 +30,36 @@ def hello_world(request):
         model = models.resnet18(pretrained=True)
     model.eval()
 
+    # Set CORS headers for preflight requests
+
+    if request.method == 'OPTIONS':
+        # Allows GET requests from origin https://mydomain.com with
+        # Authorization header
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Headers': 'Authorization',
+            'Access-Control-Max-Age': '3600',
+            'Access-Control-Allow-Credentials': 'true'
+        }
+        return ('', 204, headers)
+
     # test url
+    """
     url, filename = ("https://github.com/pytorch/hub/raw/master/dog.jpg", "/tmp/dog.jpg")
     try:
         urllib.request.urlretrieve(url, filename)
     except:
         urllib.request.urlretrieve(url, filename)
+    """
+    try:
+        imfile = request.files['photo']
+
+        filename = "/tmp/to_pred.jpg"
+        imfile.save(filename)
+
+    except:
+        return "error with file"
 
     # get imagenet labels
     class_idx = json.loads(urllib.request.urlopen("https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json").read())
@@ -63,4 +87,8 @@ def hello_world(request):
     for idx in top_i:
         top_pred.append((idx2label[idx], pred[idx]))
 
-    return jsonify(top_pred)
+    headers = {
+        'Access-Control-Allow-Origin': '*'
+    }
+
+    return (jsonify(top_pred), 200, headers)

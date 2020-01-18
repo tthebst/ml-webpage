@@ -15,14 +15,10 @@
             <div class="col">
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" onchange="loadFile(event)" class="custom-file-input" id="inputGroupFile04"
-                            aria-describedby="inputGroupFileAddon04">
+                        <input type="file" onchange="loadFile(event)" name="file" class="custom-file-input"
+                            id="inputGroupFile04" aria-describedby="inputGroupFileAddon04">
                         <label class="custom-file-label" for="inputGroupFile04" id="choosefile_label">Choose
                             file</label>
-                    </div>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04"
-                            onclick="image_upload()">Upload</button>
                     </div>
                 </div>
             </div>
@@ -35,7 +31,7 @@
                     suscipit illum est quis beatae, sequi eos eveniet? Itaque voluptates atque odio labore nostrum
                     debitis, sit ullam!</p>
 
-                <button type="button" class="btn btn-primary">Predict</button>
+                <button type="button" class="btn btn-primary" onclick="image_predict_resnet18()">Predict</button>
             </div>
             <div class="col-sm">
                 <h3 class="text-center">Resnet18</h3>
@@ -69,15 +65,18 @@
     };
 
 
-    function image_upload() {
+    function image_predict_resnet18() {
         let photo = document.getElementById("inputGroupFile04").files[0];
         let formData = new FormData();
-        console.log(photo)
-
         formData.append("photo", photo);
-        fetch('/classification', { method: "POST", body: formData });
-
-
+        fetch('https://us-central1-ml-webpage-264418.cloudfunctions.net/test-model', {
+            method: "POST", body: formData
+        }).then(function (a) {
+            return a.json(); // call the json method on the response to get JSON
+        })
+            .then(function (json) {
+                console.log(json)
+            });
     }
 
 </script>
