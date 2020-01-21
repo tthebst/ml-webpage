@@ -24,8 +24,20 @@ function image_predict(result, spinner, fetch_url) {
     document.getElementById(result).innerHTML = `<div class="spinner-border text-dark" id=${spinner} role="status"><span class="sr-only"> Loading...</span ></div >`;
 
 
+
+
+
+
+
+
+
     fetch(fetch_url, {
         method: "POST", body: formData
+    }).then((response) => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response
     }).then(function (a) {
         document.getElementById(spinner).classList.add('invisible')
         return a.json(); // call the json method on the response to get JSON
