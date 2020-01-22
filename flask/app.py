@@ -20,3 +20,9 @@ def classification():
         imfile.save("hallo.jpg")
 
     return render_template('classification.html')
+
+
+@app.route('/object_detect', methods=["GET", "POST"])
+def object_detect():
+
+    return render_template('object_detect.html')
