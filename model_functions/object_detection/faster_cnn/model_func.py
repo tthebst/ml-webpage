@@ -63,24 +63,32 @@ def hello_world(request):
 
     # prepare data
 
-    # For training
-    images, boxes = torch.rand(4, 3, 600, 1200), torch.rand(4, 11, 4)
-    labels = torch.randint(1, 91, (4, 11))
-    images = list(image for image in images)
-    targets = []
-    for i in range(len(images)):
-        d = {}
-        d['boxes'] = boxes[i]
-        d['labels'] = labels[i]
-        targets.append(d)
-    output = model(images, targets)
-    # For inference
+    # define box drawing function
+    def bbox_to_rect(bbox, color):
+        return plt.Rectangle(xy=(bbox[0], bbox[1]), width=bbox[2]-bbox[0], height=bbox[3]-bbox[1], fill=False, edgecolor=color, linewidth=2)
+
+    # transform input image
+    input_image = Image.open(filename)
+    tarans = torchvision.transforms.ToTensor()
+    input_image = tarans(input_image)
     model.eval()
-    x = [torch.rand(3, 300, 400), torch.rand(3, 500, 400)]
-    predictions = model(x)
+
+    predictions = model([input_image])
+
+    # draw image with boxes
+    image = [np.moveaxis(image[0].cpu().detach().numpy(), 0, -1)]
+    fig = plt.imshow(image[0])
+    for boxes in predictions[0]['boxes'].data.cpu().detach().numpy().tolist():
+        fig.axes.add_patch(bbox_to_rect(boxes, 'blue'))
+
+    buf = BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.getvalue())
+    buf.close()
 
     headers = {
         'Access-Control-Allow-Origin': '*'
     }
 
-    return (jsonify(img_str), 200, headers)
+    return (jsonify(image_base64), 200, headers)

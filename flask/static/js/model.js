@@ -105,20 +105,7 @@ function image_detect(result, spinner, fetch_url) {
 
 
         console.log(json);
-        imgElem.setAttribute('src', "data:image/jpg;base64," + json);
-
-
-
-        for (var i = 0; i < json.length; ++i) {
-            var li = document.createElement('li');
-            pred = json[i][0][0].toUpperCase() + json[i][0].slice(1)
-            li.innerHTML = new String(pred.bold() + ": " + json[i][1]);
-            //li.classList.add("list-group-item");
-            li.classList.add("border-0")   // Use innerHTML to set the text
-            ul.appendChild(li);
-
-
-        }
+        imgElem.setAttribute('src', "data:image/png;base64," + json);
 
 
 

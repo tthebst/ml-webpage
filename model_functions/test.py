@@ -1,7 +1,15 @@
+import matplotlib.pyplot as plt
 import json
 import urllib.request
-
-url, filename = ("https://github.com/pytorch/hub/raw/master/dog.jpg", "dog.jpg")
+import torchvision
+import torch
+import numpy as np
+from PIL import Image
+from io import BytesIO
+import base64
+import tensorflow as tf
+import tensorflow_hub as hub
+url, filename = ("https://www.lausanne2020.sport/var/ezdemo_site/storage/images/media/news-story-galleries/18_01_ice_hockey/kehl/640454-1-eng-GB/kehl_col12Width.jpg", "dog.jpg")
 try:
     urllib.request.urlretrieve(url, filename)
 except:
@@ -10,16 +18,57 @@ pred = [4.057498514953295e-08, 5.984022610761031e-09, 6.392280482714341e-09, 2.7
         1.6208726094646408e-07, 5.479686482345869e-09, 8.912767412994071e-09, 4.303949696637943e-10, 7.0130519169708805e-09, 4.825931299023978e-08, 9.558023261746484e-10, 5.964153615423129e-08, 3.160145567449035e-08, 1.2120432302253903e-07, 3.443920491008612e-07, 2.4218218541705028e-08, 2.115813080294515e-09, 6.639865546276269e-08, 6.879559464323393e-07, 1.427895579553251e-08, 1.6187314599847014e-07, 2.5770130918090217e-08, 3.481594745835537e-08, 4.026775002330396e-08, 8.507935689294754e-08, 2.360758770691973e-07, 1.833044827037611e-08, 3.290691807933399e-08, 1.5053934987463435e-08, 8.140016660718175e-09, 1.515578702537823e-07, 2.3133870374891785e-09, 1.716300701559703e-08, 2.0576917947323636e-08, 6.308058431159225e-08, 4.485026749989629e-08, 2.4505306117639236e-10, 1.2101692092869598e-08, 3.929917724576626e-08, 1.2409415717229422e-08, 4.115022544937119e-09, 1.3263321818612894e-07, 9.335192885373544e-07]
 
 
-labels = json.loads(urllib.request.urlopen("https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json").read())
-class_idx = labels
-idx2label = [class_idx[str(k)][1] for k in range(len(class_idx))]
+def bbox_to_rect(bbox, color):
+    """Convert bounding box to matplotlib format."""
+    # Convert the bounding box (top-left x, top-left y, bottom-right x,
+    # bottom-right y) format to matplotlib format: ((upper-left x,
+    # upper-left y), width, height)
+    return plt.Rectangle(xy=(bbox[0], bbox[1]), width=bbox[2]-bbox[0], height=bbox[3]-bbox[1], fill=False, edgecolor=color, linewidth=2)
 
-top_pred = []
 
-top_i = sorted(range(len(pred)), key=lambda i: pred[i], reverse=True)[:5]
+input_image = Image.open(filename)
 
-for idx in top_i:
-    print(pred[idx])
-    print(idx2label[idx])
-    top_pred.append((idx2label[idx], pred[idx]))
-    print("====")
+
+width, height = input_image.size[:2]
+new_height = 500
+new_width = new_height * width / height
+input_image = input_image.resize((int(new_width), new_height), Image.ANTIALIAS)
+
+
+print(type(input_image))
+tarans = torchvision.transforms.ToTensor()
+print(type(input_image))
+input_image = tarans(input_image)
+print(type(input_image))
+print(input_image.shape)
+
+
+input_batch = input_image.unsqueeze(0)
+
+
+detector = hub.load("https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1")
+
+detector_output = detector(tf.convert_to_tensor(input_batch.cpu().detach().numpy()), as_dict=True)
+
+print(detector_output)
+#model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
+# For training
+# For inference
+# model.eval()
+image = input_batch
+predictions = model(image)
+print(predictions)
+image = [np.moveaxis(image[0].cpu().detach().numpy(), 0, -1)]
+
+fig = plt.imshow(image[0])
+
+print(predictions[0]['boxes'].data.cpu().detach().numpy().tolist())
+for boxes in predictions[0]['boxes'].data.cpu().detach().numpy().tolist():
+    fig.axes.add_patch(bbox_to_rect(boxes, 'blue'))
+
+
+buf = BytesIO()
+plt.savefig(buf, format='png')
+buf.seek(0)
+image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
+buf.close()
