@@ -46,7 +46,7 @@ print(input_image.shape)
 input_batch = input_image.unsqueeze(0)
 
 
-detector = hub.load("https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1")
+detector = hub.Module("https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1")
 
 detector_output = detector(tf.convert_to_tensor(input_batch.cpu().detach().numpy()), as_dict=True)
 
