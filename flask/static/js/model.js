@@ -97,22 +97,23 @@ function image_detect(result, spinner, fetch_url) {
         return response
     }).then(function (a) {
         document.getElementById(spinner).classList.add('invisible');
-        return a; // call the json method on the response to get JSON
+        return a.text(); // call the json method on the response to get JSON
     }).then(function (json) {
         res = document.getElementById(result);
         var listDiv = res;
         res.removeChild(res.firstChild);
+        res = document.getElementById(result);
 
+        //add predicted image
+        var img = new Image();
+        img.src = "data:image/jpg;base64," + json.substring(3, json.length - 7);
+        img.classList.add("img-fluid");
+        res.appendChild(img);
 
-        console.log(json);
-        imgElem.setAttribute('src', "data:image/png;base64," + json);
-
-
-
-        li = document.createElement('li');
+        //add reload button
+        li = document.createElement('p');
         li.innerHTML = `<i class="fas fa-redo fa-1x text-right" style="padding-top: 0.3em"></i>`;
-        li.firstChild.addEventListener("click", function () { image_predict(result, spinner, fetch_url); }, false);
-        ul.appendChild(li);
-        listDiv.appendChild(ul);
+        li.firstChild.addEventListener("click", function () { image_detect(result, spinner, fetch_url); }, false);
+        res.appendChild(li);
     });
 }
