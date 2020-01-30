@@ -105,10 +105,13 @@ function image_detect(result, spinner, fetch_url) {
         res = document.getElementById(result);
 
         //add predicted image
+        d = document.createElement('div');
+        d.classList.add("img-hover");
         var img = new Image();
         img.src = "data:image/jpg;base64," + json.substring(3, json.length - 7);
         img.classList.add("img-fluid");
-        res.appendChild(img);
+        d.appendChild(img);
+        res.appendChild(d);
 
         //add reload button
         li = document.createElement('p');
