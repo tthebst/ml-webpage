@@ -13,19 +13,12 @@ def home():
     return "Nothing to see here...."
 
 
-"""
-@app.route('/deeplabv3', methods=["POST"])
-def deeplabv3():
+@app.route('/pgan', methods=["GET"])
+def pgan():
 
-    if request.method == "POST":
-        imfile = request.files['photo']
-        imfile.save("/tmp/to_pred.jpg")
-
-        to_send = models.deeplabv3(request)
-        print(to_send)
+    to_send = models.pgan()
 
     return to_send
-"""
 
 
 @app.route('/fastrnn', methods=["POST"])

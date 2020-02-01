@@ -26,3 +26,9 @@ def classification():
 def object_detect():
 
     return render_template('object_detect.html')
+
+
+@app.route('/generative', methods=["GET", "POST"])
+def generative():
+
+    return render_template('generative.html')

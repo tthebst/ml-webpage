@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<main role="main">
+
+
+    <div class="container">
+        <!-- Example row of columns -->
+        <div class="row mt-5" style="height: 15em;margin-top:15em" id="top_row">
+            <div class="col" style="margin-top:5em">
+                <h2 class="text-center">Upload your Picture:</h2>
+            </div>
+            <div class="col">
+                <div class="input-group" style="margin-top:5em">
+                    <div class="custom-file">
+                        <input type="file" onchange="loadFile(event)" name="file" class="custom-file-input"
+                            id="inputGroupFile04" aria-describedby="inputGroupFileAddon04">
+                        <label class="custom-file-label" for="inputGroupFile04" id="choosefile_label">Choose
+                            file</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <img id="output" class="img-fluid" />
+            </div>
+
+        </div>
+        <div class="row mt-5" style="height: 25em;">
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">Resnet18</h2>
+                </div>
+                <div class="row">
+                    <p>Resnet18 uses only 5 layers. Like all Resnet models this model internally skips some layers to
+                        deal with de vanishing gradient problem. This problem expacially occurs in deep networks like
+                        Resnet. This
+                        model was introduced in 2015.</p>
+                </div>
+
+                <div class="row" id="result1">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_generate("result1","spinner1","http://localhost:5001/pgan")'>Generate</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">Resnet50</h2>
+                </div>
+                <div class="row">
+                    <p>Resnet18 uses only 50 layers. Like all Resnet models this model internally skips some layers to
+                        deal with de vanishing gradient problem. This problem expacially occurs in deep networks like
+                        Resnet. This
+                        model was introduced in 2015.</p>
+                </div>
+
+                <div class="row" id="result3">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_predict("result3","spinner3","https://us-central1-ml-webpage-264418.cloudfunctions.net/resnet50")'>Predict</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">ResNeXt</h2>
+                </div>
+                <div class="row">
+                    <p>ResNeXt models are pre-trained in weakly-supervised fashion on 940 million public
+                        images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on
+                        ImageNet1K dataset. This model was released in 2018 and achieves <b>state-of-the-art</b>
+                        accuracy.</p>
+                </div>
+
+                <div class="row" id="result2">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_predict("result2","spinner2","https://us-central1-ml-webpage-264418.cloudfunctions.net/resnext")'>Predict</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="row mt-5" style="height: 25em;">
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">Alexnet</h2>
+                </div>
+                <div class="row">
+                    <p>AlexNet competed in the ImageNet Large Scale Visual Recognition Challenge on September 30, 2012.
+                        It achieved an error rate of 15.3%, which was 10% lower than the previous best model. One could
+                        say this is the OG computervision model.</p>
+                </div>
+
+                <div class="row" id="result4">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_predict("result4","spinner4","https://us-central1-ml-webpage-264418.cloudfunctions.net/alexnet")'>Predict</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">Densenet</h2>
+                </div>
+                <div class="row">
+                    <p>Dense Convolutional Network (DenseNet), connects each layer to every other layer in a
+                        feed-forward fashion. DenseNets have several compelling advantages: they alleviate the
+                        vanishing-gradient problem, strengthen feature propagation, encourage feature reuse, and
+                        substantially reduce the number of parameters.
+                        This model was released in 2016.</p>
+                </div>
+
+                <div class="row" id="result5">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_predict("result5","spinner5","https://us-central1-ml-webpage-264418.cloudfunctions.net/densenet")'>Predict</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">Googlenet</h2>
+                </div>
+                <div class="row">
+                    <p>GoogLeNet was based on a deep convolutional neural network architecture codenamed “Inception”,
+                        which was responsible for setting the new state of the art for classification and detection in
+                        the ImageNet Large-Scale Visual Recognition Challenge 2014.</p>
+                </div>
+
+                <div class="row" id="result6">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_predict("result6","spinner6","https://us-central1-ml-webpage-264418.cloudfunctions.net/googlenet")'>Predict</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row mt-5" style="height: 25em;">
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">Mobilenet</h2>
+                </div>
+                <div class="row">
+                    <p>The MobileNet v2 architecture is based on an inverted residual structure where the input and
+                        output of the residual block are thin bottleneck layers opposite to traditional residual models
+                        which use expanded representations in the input. This model was released in 2018.</p>
+                </div>
+
+                <div class="row" id="result7">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_predict("result7","spinner7","https://us-central1-ml-webpage-264418.cloudfunctions.net/mobilenet")'>Predict</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">Densenet</h2>
+                </div>
+                <div class="row">
+                    <p> Very Deep Convolutional Networks for Large-Scale Image Recognition are models with a lot of
+                        layers. They also use small convultion filters such that trianing stays computationally
+                        possible. This model was introduced in 2014.</p>
+                </div>
+
+                <div class="row" id="result8">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_predict("result8","spinner8","https://us-central1-ml-webpage-264418.cloudfunctions.net/vgg")'>Predict</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col m-3">
+                <div class="row">
+                    <h2 class="text-center">Squeezenet</h2>
+                </div>
+                <div class="row">
+                    <p>Squeezenet achives AlexNet level results with 50x less parameters. The model size is less than
+                        1mb and was introduced in 2017.</p>
+                </div>
+
+                <div class="row" id="result9">
+                    <div class="text-center">
+                        <button type="button" id="pred_button" class="btn btn-dark"
+                            onclick='image_predict("result9","spinner9","https://us-central1-ml-webpage-264418.cloudfunctions.net/squeeznet")'>Predict</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <hr>
+
+    </div> <!-- /container -->
+
+</main>
+
+
+
+{% endblock %}
