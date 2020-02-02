@@ -1,0 +1,8 @@
+tensorflow==1.15.0
+torch
+Pillow==6.1
+flask
+matplotlib
+
+numpy
+tensorflow-hub
