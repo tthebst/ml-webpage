@@ -1,8 +1,6 @@
 
 
 pgan_model = None
-fastrnn_model = None
-fastrnn_model2 = None
 
 
 def pgan():

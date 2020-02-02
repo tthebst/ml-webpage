@@ -1,6 +1,8 @@
 tensorflow==1.15.0
-torch
+requests
 Pillow==6.1
+
+
 flask
 matplotlib
 

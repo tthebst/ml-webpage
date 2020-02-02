@@ -16,8 +16,16 @@ def home():
 @app.route('/pgan', methods=["GET"])
 def pgan():
 
-    to_send = models.pgan()
+    try:
+        to_send = models.pgan()
 
+    except Exception as e:
+        print(e)
+        headers = {
+            'Access-Control-Allow-Origin': '*'
+        }
+        print("error")
+        return ("ERROR OCCURED", 404, headers)
     return to_send
 
 

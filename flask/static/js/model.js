@@ -132,7 +132,12 @@ function image_generate(result, spinner, fetch_url) {
         method: "GET"
     }).then((response) => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            d = document.createElement('h4');
+            d.innerHTML = "Something went wrong... Roboters still asleep";
+            d.classList.add("text-danger");
+            res = document.getElementById(result);
+            res.appendChild(d);
+
         }
         return response
     }).then(function (a) {
@@ -145,14 +150,15 @@ function image_generate(result, spinner, fetch_url) {
         res = document.getElementById(result);
 
         //add predicted image
-        d = document.createElement('div');
-        d.classList.add("img-hover");
-        var img = new Image();
-        img.src = "data:image/jpg;base64," + json.substring(3, json.length - 7);
-        img.classList.add("img-fluid");
-        d.appendChild(img);
-        res.appendChild(d);
-
+        if (!response.ok) {
+            d = document.createElement('div');
+            d.classList.add("img-hover");
+            var img = new Image();
+            img.src = "data:image/jpg;base64," + json.substring(3, json.length - 7);
+            img.classList.add("img-fluid");
+            d.appendChild(img);
+            res.appendChild(d);
+        }
         //add reload button
         li = document.createElement('p');
         li.innerHTML = `<i class="fas fa-redo fa-1x text-right" style="padding-top: 0.3em"></i>`;
