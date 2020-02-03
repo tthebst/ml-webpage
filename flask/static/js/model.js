@@ -142,15 +142,16 @@ function image_generate(result, spinner, fetch_url) {
         return response
     }).then(function (a) {
         document.getElementById(spinner).classList.add('invisible');
-        return a.text(); // call the json method on the response to get JSON
-    }).then(function (json) {
+        return a; // call the json method on the response to get JSON
+    }).then(function (response) {
+        json = response.text()
         res = document.getElementById(result);
         var listDiv = res;
         res.removeChild(res.firstChild);
         res = document.getElementById(result);
 
         //add predicted image
-        if (!response.ok) {
+        if (response.ok) {
             d = document.createElement('div');
             d.classList.add("img-hover");
             var img = new Image();
@@ -159,10 +160,12 @@ function image_generate(result, spinner, fetch_url) {
             d.appendChild(img);
             res.appendChild(d);
         }
+
         //add reload button
         li = document.createElement('p');
+        console.log("hh");
         li.innerHTML = `<i class="fas fa-redo fa-1x text-right" style="padding-top: 0.3em"></i>`;
-        li.firstChild.addEventListener("click", function () { image_detect(result, spinner, fetch_url); }, false);
-        res.appendChild(li);
+        li.firstChild.addEventListener("click", function () { image_generate(result, spinner, fetch_url); }, false);
+        document.getElementById(result).appendChild(li);
     });
 }

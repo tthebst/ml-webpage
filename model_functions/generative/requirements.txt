@@ -1,7 +1,7 @@
-tensorflow==1.15.0
+
 requests
 Pillow==6.1
-
+scipy
 
 flask
 matplotlib
