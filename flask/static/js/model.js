@@ -142,24 +142,26 @@ function image_generate(result, spinner, fetch_url) {
         return response
     }).then(function (a) {
         document.getElementById(spinner).classList.add('invisible');
-        return a; // call the json method on the response to get JSON
-    }).then(function (response) {
-        json = response.text()
+        return a.text(); // call the json method on the response to get JSON
+    }).then(function (json) {
+        //txt = response.text()
         res = document.getElementById(result);
         var listDiv = res;
         res.removeChild(res.firstChild);
         res = document.getElementById(result);
 
         //add predicted image
-        if (response.ok) {
-            d = document.createElement('div');
-            d.classList.add("img-hover");
-            var img = new Image();
-            img.src = "data:image/jpg;base64," + json.substring(3, json.length - 7);
-            img.classList.add("img-fluid");
-            d.appendChild(img);
-            res.appendChild(d);
-        }
+
+        d = document.createElement('div');
+        d.classList.add("img-hover");
+        var img = new Image();
+        console.log(json)
+        img.src = "data:image/png;base64," + json.substring(3, json.length - 3);
+        console.log(img.src)
+        img.classList.add("img-fluid");
+        d.appendChild(img);
+        res.appendChild(d);
+
 
         //add reload button
         li = document.createElement('p');

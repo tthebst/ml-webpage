@@ -1,6 +1,8 @@
 from flask import Flask, request
 from flask import render_template
 import os
+import tensorflow_hub as hub
+import tensorflow as tf
 import json
 import models
 from tensorflow import keras
@@ -45,4 +47,4 @@ def biggan():
 
 
 if __name__ == '__main__':
-    app.run(port=5002, debug=True, host="0.0.0.0", threaded=False)
+    app.run(port=5002, debug=True, host="0.0.0.0",  threaded=False)
