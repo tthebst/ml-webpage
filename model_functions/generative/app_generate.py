@@ -33,7 +33,10 @@ def pgan():
 
 @app.route('/biggan', methods=["GET", "POST"])
 def biggan():
-    to_send = models.biggan(request)
+    print(request.data)
+    to_pred = json.loads(request.data.decode())
+    print(to_pred)
+    to_send = models.biggan(request, to_pred=int(to_pred['a']))
     try:
         pass
     except Exception as e:

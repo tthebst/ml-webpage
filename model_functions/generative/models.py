@@ -80,7 +80,7 @@ def pgan():
     return (jsonify(str(img_str)), 200, headers)
 
 
-def biggan(request):
+def biggan(request, to_pred=42):
     """Responds to any HTTP request.
    Args:
         request(flask.Request): HTTP request object.
@@ -218,30 +218,53 @@ def biggan(request):
         truncation = 0.4  # @param {type:"slider", min:0.02, max:1, step:0.02}
         noise_seed = 0  # @param {type:"slider", min:0, max:100, step:1}
 
+    def one_hot(index, vocab_size):
+        index = np.asarray(index)
+        if len(index.shape) == 0:
+            index = np.asarray([index])
+        assert len(index.shape) == 1
+        num = index.shape[0]
+        output = np.zeros((num, vocab_size), dtype=np.float32)
+        output[np.arange(num), index] = 1
+        return output
+
+    def one_hot_if_needed(label, vocab_size):
+        label = np.asarray(label)
+        if len(label.shape) <= 1:
+            label = one_hot(label, vocab_size)
+        assert len(label.shape) == 2
+        return label
+
     # Load BigGAN 512 module.
+    tf.reset_default_graph()
     module = hub.Module('https://tfhub.dev/deepmind/biggan-512/2')
 
     # Sample random noise (z) and ImageNet label (y) inputs.
     batch_size = 1
     truncation = 0.5  # scalar truncation value in [0.02, 1.0]
     z = truncation * tf.random.truncated_normal([batch_size, 128])  # noise sample
-    y_index = tf.random.uniform([batch_size], maxval=1000, dtype=tf.int32)
-    y = tf.one_hot(y_index, 1000)  # one-hot ImageNet label
+
+    label = np.asarray(to_pred)
+    print(label.shape)
+    label = one_hot_if_needed(label, 1000)
+    print(label)
 
     # Call BigGAN on a dict of the inputs to generate a batch of images with shape
     # [8, 512, 512, 3] and range [-1, 1].
     print("creating smaples")
-    samples = module(dict(y=y, z=z, truncation=truncation))
-    print(type(samples))
+    samples = module(dict(y=label, z=z, truncation=truncation))
     config = tf.ConfigProto(device_count={'GPU': 0})
     initializer = tf.global_variables_initializer()
     sess = tf.Session(config=config)
     sess.run(initializer)
     samples = sess.run(samples)
-    print(type(samples))
-    print("created smaples")
 
-    plt.imsave("/tmp/generated.png", imgrid(samples.astype('uint8'), cols=min(batch_size, 5)))
+    samples = [samples]
+    samples = np.concatenate(samples, axis=0)
+    # assert samples.shape[0] == num
+    samples = np.clip(((samples + 1) / 2.0) * 256, 0, 255)
+    samples = np.uint8(samples)
+    plt.imsave("/tmp/generated.png", imgrid(samples, cols=min(batch_size, 5)))
 
     with open("/tmp/generated.png", 'rb') as f:
         img_str = base64.b64encode(f.read())

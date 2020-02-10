@@ -128,8 +128,9 @@ function image_generate(result, spinner, fetch_url) {
     //remove predict button and add loader symbol
     document.getElementById(result).innerHTML = `<div class="spinner-border text-dark" id=${spinner} role="status"><span class="sr-only"> Loading...</span ></div >`;
     console.log("fwetch");
+    console.log(document.getElementById("biggan_options").value);
     fetch(fetch_url, {
-        method: "GET"
+        method: "POST", body: JSON.stringify({ a: document.getElementById("biggan_options").value })
     }).then((response) => {
         if (!response.ok) {
             d = document.createElement('h4');
@@ -171,3 +172,4 @@ function image_generate(result, spinner, fetch_url) {
         document.getElementById(result).appendChild(li);
     });
 }
+

@@ -39,6 +39,7 @@
                         model was introduced in 2015.</p>
                 </div>
 
+
                 <div class="row" id="result1">
                     <div class="text-center">
                         <button type="button" id="pred_button" class="btn btn-dark"
@@ -55,6 +56,17 @@
                         deal with de vanishing gradient problem. This problem expacially occurs in deep networks like
                         Resnet. This
                         model was introduced in 2015.</p>
+                    <div class="form-group">
+
+                        <label for="exampleFormControlSelect1">Example select</label>
+                        <select class="form-control" id="biggan_options">
+                            {% for i in range(0,idx|length) %}
+                            <option value="{{ idx[i] }}">{{ label[i] }}</option>
+                            {% else %}
+                            no true items
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
 
                 <div class="row" id="result3">

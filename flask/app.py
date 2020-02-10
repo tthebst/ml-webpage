@@ -1,6 +1,8 @@
 from flask import Flask, request
 from flask import render_template
 import os
+import urllib.request
+import json
 app = Flask(__name__)
 
 
@@ -31,7 +33,11 @@ def object_detect():
 @app.route('/generative', methods=["GET", "POST"])
 def generative():
 
-    return render_template('generative.html')
+    class_idx = json.loads(urllib.request.urlopen("https://s3.amazonaws.com/deep-learning-models/image-models/imagenet_class_index.json").read())
+    label = [class_idx[str(k)][1] for k in range(len(class_idx))]
+    idx = [k for k in range(len(class_idx))]
+
+    return render_template('generative.html', label=label, idx=idx)
 
 
 if __name__ == '__main__':
