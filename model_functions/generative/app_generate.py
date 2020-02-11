@@ -1,3 +1,4 @@
+import time
 from flask import Flask, request
 from flask import render_template
 import os
@@ -7,6 +8,35 @@ import json
 import models
 from tensorflow import keras
 app = Flask(__name__)
+
+module = None
+sess = None
+graph = None
+output = None
+inputs = None
+
+
+@app.before_first_request
+def gen_module():
+    global module
+    global sess
+    global graph
+    global output
+    global inputs
+
+    pre = time.time()
+
+    tf.reset_default_graph()
+    module = hub.Module('https://tfhub.dev/deepmind/biggan-512/2')
+
+    inputs = {k: tf.placeholder(v.dtype, v.get_shape().as_list(), k)
+              for k, v in module.get_input_info_dict().items()}
+    output = module(inputs)
+    config = tf.ConfigProto(device_count={'GPU': 0})
+    initializer = tf.global_variables_initializer()
+    sess = tf.Session(config=config)
+    sess.run(initializer)
+    graph = tf.get_default_graph()
 
 
 @app.route('/')
@@ -33,10 +63,8 @@ def pgan():
 
 @app.route('/biggan', methods=["GET", "POST"])
 def biggan():
-    print(request.data)
     to_pred = json.loads(request.data.decode())
-    print(to_pred)
-    to_send = models.biggan(request, to_pred=int(to_pred['a']))
+    to_send = models.biggan(request, module, sess,  graph, output, inputs, to_pred=int(to_pred['a']))
     try:
         pass
     except Exception as e:

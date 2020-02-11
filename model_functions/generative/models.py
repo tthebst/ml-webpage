@@ -1,7 +1,7 @@
 
 
 pgan_model = None
-biggan_model = None
+# module = None
 
 
 def pgan():
@@ -80,7 +80,7 @@ def pgan():
     return (jsonify(str(img_str)), 200, headers)
 
 
-def biggan(request, to_pred=42):
+def biggan(request, module, sess, graph, output, inputs, to_pred=42):
     """Responds to any HTTP request.
    Args:
         request(flask.Request): HTTP request object.
@@ -91,6 +91,7 @@ def biggan(request, to_pred=42):
     """
 
     # imports
+    import time
     import pickle as pk
     from flask import jsonify
     import urllib.request
@@ -130,58 +131,6 @@ def biggan(request, to_pred=42):
             'Access-Control-Allow-Credentials': 'true'
         }
         return ('', 204, headers)
-
-    # def truncated_z_sample(batch_size, truncation=1., seed=None):
-    #     state = None if seed is None else np.random.RandomState(seed)
-    #     values = truncnorm.rvs(-2, 2, size=(batch_size, dim_z), random_state=state)
-    #     return truncation * values
-
-    # def one_hot(index, vocab_size=vocab_size):
-    #     index = np.asarray(index)
-    #     if len(index.shape) == 0:
-    #         index = np.asarray([index])
-    #     assert len(index.shape) == 1
-    #     num = index.shape[0]
-    #     output = np.zeros((num, vocab_size), dtype=np.float32)
-    #     output[np.arange(num), index] = 1
-    #     return output
-
-    # def one_hot_if_needed(label, vocab_size=vocab_size):
-    #     label = np.asarray(label)
-    #     if len(label.shape) <= 1:
-    #         label = one_hot(label, vocab_size)
-    #     assert len(label.shape) == 2
-    #     return label
-
-    # def sample(sess, noise, label, output, truncation=1., batch_size=8, vocab_size=vocab_size):
-    #     noise = np.asarray(noise)
-    #     label = np.asarray(label)
-    #     num = noise.shape[0]
-    #     if len(label.shape) == 0:
-    #         label = np.asarray([label] * num)
-    #     if label.shape[0] != num:
-    #         raise ValueError('Got # noise samples ({}) != # label samples ({})'
-    #                          .format(noise.shape[0], label.shape[0]))
-    #     label = one_hot_if_needed(label, vocab_size)
-    #     ims = []
-    #     print(num)
-    #     for batch_start in range(0, num, batch_size):
-    #         s = slice(batch_start, min(num, batch_start + batch_size))
-    #         feed_dict = {input_z: noise[s], input_y: label[s], input_trunc: truncation}
-    #         print("LOOOS")
-    #         ims.append(sess.run(output, feed_dict=feed_dict))
-    #         print("ddd")
-    #     ims = np.concatenate(ims, axis=0)
-    #     assert ims.shape[0] == num
-    #     ims = np.clip(((ims + 1) / 2.0) * 256, 0, 255)
-    #     ims = np.uint8(ims)
-    #     return ims
-
-    # def interpolate(A, B, num_interps):
-    #     if A.shape != B.shape:
-    #         raise ValueError('A and B must have the same shape to interpolate.')
-    #     alphas = np.linspace(0, 1, num_interps)
-    #     return np.array([(1-a)*A + a*B for a in alphas])
 
     def imgrid(imarray, cols=5, pad=1):
         if imarray.dtype != np.uint8:
@@ -235,37 +184,57 @@ def biggan(request, to_pred=42):
         assert len(label.shape) == 2
         return label
 
+    def truncated_z_sample(batch_size, truncation=1., seed=None):
+        state = None if seed is None else np.random.RandomState(seed)
+        dim_z = inputs['z'].shape.as_list()[1]
+        values = truncnorm.rvs(-2, 2, size=(batch_size, dim_z), random_state=state)
+        return truncation * values
     # Load BigGAN 512 module.
-    tf.reset_default_graph()
-    module = hub.Module('https://tfhub.dev/deepmind/biggan-512/2')
 
+    # global module
+    pre = time.time()
+    """
+    if not module:
+        tf.reset_default_graph()
+        module = hub.Module('https://tfhub.dev/deepmind/biggan-512/2')
+    """
+
+    print("loadind module time ", time.time()-pre)
     # Sample random noise (z) and ImageNet label (y) inputs.
     batch_size = 1
     truncation = 0.5  # scalar truncation value in [0.02, 1.0]
-    z = truncation * tf.random.truncated_normal([batch_size, 128])  # noise sample
+    z = truncated_z_sample(batch_size, truncation, 0)
+    z = np.asarray(z)  # noise sample
 
     label = np.asarray(to_pred)
-    print(label.shape)
     label = one_hot_if_needed(label, 1000)
-    print(label)
 
     # Call BigGAN on a dict of the inputs to generate a batch of images with shape
     # [8, 512, 512, 3] and range [-1, 1].
     print("creating smaples")
-    samples = module(dict(y=label, z=z, truncation=truncation))
+    pre = time.time()
+
+    print("module ", time.time()-pre)
+    """
     config = tf.ConfigProto(device_count={'GPU': 0})
     initializer = tf.global_variables_initializer()
     sess = tf.Session(config=config)
     sess.run(initializer)
-    samples = sess.run(samples)
+    pre = time.time()
 
+    """
+    print("running session ", time.time()-pre)
+    # with graph.as_default():
+    samples = sess.run(output, feed_dict={inputs['z']: z, inputs['y']: label, inputs['truncation']: truncation})
+    # samples = sess.run(samples)
     samples = [samples]
     samples = np.concatenate(samples, axis=0)
     # assert samples.shape[0] == num
     samples = np.clip(((samples + 1) / 2.0) * 256, 0, 255)
     samples = np.uint8(samples)
+    pre = time.time()
     plt.imsave("/tmp/generated.png", imgrid(samples, cols=min(batch_size, 5)))
-
+    print("creating image ", time.time()-pre)
     with open("/tmp/generated.png", 'rb') as f:
         img_str = base64.b64encode(f.read())
         print(type(img_str))
