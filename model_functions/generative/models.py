@@ -80,7 +80,7 @@ def pgan():
     return (jsonify(str(img_str)), 200, headers)
 
 
-def biggan(request, module, sess, graph, output, inputs, to_pred=42):
+def biggan(request, module, output, inputs, to_pred=42):
     """Responds to any HTTP request.
    Args:
         request(flask.Request): HTTP request object.
@@ -203,7 +203,7 @@ def biggan(request, module, sess, graph, output, inputs, to_pred=42):
     # Sample random noise (z) and ImageNet label (y) inputs.
     batch_size = 1
     truncation = 0.5  # scalar truncation value in [0.02, 1.0]
-    z = truncated_z_sample(batch_size, truncation, 0)
+    z = truncated_z_sample(batch_size, truncation)
     z = np.asarray(z)  # noise sample
 
     label = np.asarray(to_pred)
@@ -225,7 +225,14 @@ def biggan(request, module, sess, graph, output, inputs, to_pred=42):
     """
     print("running session ", time.time()-pre)
     # with graph.as_default():
-    samples = sess.run(output, feed_dict={inputs['z']: z, inputs['y']: label, inputs['truncation']: truncation})
+    config = tf.ConfigProto(device_count={'GPU': 0})
+    initializer = tf.global_variables_initializer()
+
+    with tf.Session(config=config).as_default() as sess:
+
+        sess.run(initializer)
+        samples = sess.run(output, feed_dict={inputs['z']: z, inputs['y']: label, inputs['truncation']: truncation})
+    print("done runnign gan")
     # samples = sess.run(samples)
     samples = [samples]
     samples = np.concatenate(samples, axis=0)
@@ -238,7 +245,6 @@ def biggan(request, module, sess, graph, output, inputs, to_pred=42):
     with open("/tmp/generated.png", 'rb') as f:
         img_str = base64.b64encode(f.read())
         print(type(img_str))
-        print(img_str)
         headers = {
             'Access-Control-Allow-Origin': '*'
         }

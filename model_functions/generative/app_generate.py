@@ -32,11 +32,13 @@ def gen_module():
     inputs = {k: tf.placeholder(v.dtype, v.get_shape().as_list(), k)
               for k, v in module.get_input_info_dict().items()}
     output = module(inputs)
+    """
     config = tf.ConfigProto(device_count={'GPU': 0})
     initializer = tf.global_variables_initializer()
     sess = tf.Session(config=config)
     sess.run(initializer)
     graph = tf.get_default_graph()
+    """
 
 
 @app.route('/')
@@ -64,7 +66,8 @@ def pgan():
 @app.route('/biggan', methods=["GET", "POST"])
 def biggan():
     to_pred = json.loads(request.data.decode())
-    to_send = models.biggan(request, module, sess,  graph, output, inputs, to_pred=int(to_pred['a']))
+    print("requesting gan", sess, graph)
+    to_send = models.biggan(request, module, output, inputs, to_pred=int(to_pred['a']))
     try:
         pass
     except Exception as e:
