@@ -173,3 +173,55 @@ function image_generate(result, spinner, fetch_url) {
     });
 }
 
+function image_generate_pgan(result, spinner, fetch_url) {
+
+
+
+    //remove predict button and add loader symbol
+    document.getElementById(result).innerHTML = `<div class="spinner-border text-dark" id=${spinner} role="status"><span class="sr-only"> Loading...</span ></div >`;
+    console.log("fwetch");
+    console.log(document.getElementById("biggan_options").value);
+    fetch(fetch_url, {
+        method: "GET"
+    }).then((response) => {
+        if (!response.ok) {
+            d = document.createElement('h4');
+            d.innerHTML = "Something went wrong... Roboters still asleep";
+            d.classList.add("text-danger");
+            res = document.getElementById(result);
+            res.appendChild(d);
+
+        }
+        return response
+    }).then(function (a) {
+        document.getElementById(spinner).classList.add('invisible');
+        return a.text(); // call the json method on the response to get JSON
+    }).then(function (json) {
+        //txt = response.text()
+        res = document.getElementById(result);
+        var listDiv = res;
+        res.removeChild(res.firstChild);
+        res = document.getElementById(result);
+
+        //add predicted image
+
+        d = document.createElement('div');
+        d.classList.add("img-hover");
+        var img = new Image();
+        console.log(json)
+        img.src = "data:image/png;base64," + json.substring(3, json.length - 3);
+        console.log(img.src)
+        img.classList.add("img-fluid");
+        d.appendChild(img);
+        res.appendChild(d);
+
+
+        //add reload button
+        li = document.createElement('p');
+        console.log("hh");
+        li.innerHTML = `<i class="fas fa-redo fa-1x text-right" style="padding-top: 0.3em"></i>`;
+        li.firstChild.addEventListener("click", function () { image_generate_pgan(result, spinner, fetch_url); }, false);
+        document.getElementById(result).appendChild(li);
+    });
+}
+

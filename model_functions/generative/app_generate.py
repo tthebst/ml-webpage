@@ -5,7 +5,8 @@ import os
 import tensorflow_hub as hub
 import tensorflow as tf
 import json
-import models
+import sys
+import servingmodels
 from tensorflow import keras
 app = Flask(__name__)
 
@@ -15,7 +16,7 @@ graph = None
 output = None
 inputs = None
 
-
+# prepares biggan module for faster later use
 @app.before_first_request
 def gen_module():
     global module
@@ -32,13 +33,6 @@ def gen_module():
     inputs = {k: tf.placeholder(v.dtype, v.get_shape().as_list(), k)
               for k, v in module.get_input_info_dict().items()}
     output = module(inputs)
-    """
-    config = tf.ConfigProto(device_count={'GPU': 0})
-    initializer = tf.global_variables_initializer()
-    sess = tf.Session(config=config)
-    sess.run(initializer)
-    graph = tf.get_default_graph()
-    """
 
 
 @app.route('/')
@@ -49,9 +43,9 @@ def home():
 
 @app.route('/pgan', methods=["GET"])
 def pgan():
-
+    to_send = servingmodels.pgan(request)
     try:
-        to_send = models.pgan()
+        pass
 
     except Exception as e:
         print(e)
@@ -65,11 +59,10 @@ def pgan():
 
 @app.route('/biggan', methods=["GET", "POST"])
 def biggan():
-    to_pred = json.loads(request.data.decode())
-    print("requesting gan", sess, graph)
-    to_send = models.biggan(request, module, output, inputs, to_pred=int(to_pred['a']))
+
     try:
-        pass
+        to_pred = json.loads(request.data.decode())
+        to_send = servingmodels.biggan(request, module, output, inputs, to_pred=int(to_pred['a']))
     except Exception as e:
         print(e)
         headers = {

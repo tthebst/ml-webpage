@@ -4,7 +4,7 @@ pgan_model = None
 # module = None
 
 
-def pgan():
+def pgan(request):
     """Responds to any HTTP request.
    Args:
         request(flask.Request): HTTP request object.
@@ -32,10 +32,9 @@ def pgan():
     if not pgan_model:
         # download model from GCS
         use_gpu = True if torch.cuda.is_available() else False
-        model = torch.hub.load('facebookresearch/pytorch_GAN_zoo:hub',
-                               'PGAN', model_name='celebAHQ-512',
-                               pretrained=True, useGPU=use_gpu)
-    model.eval()
+        pgan_model = torch.hub.load('facebookresearch/pytorch_GAN_zoo:hub',
+                                    'PGAN', model_name='celebAHQ-512',
+                                    pretrained=True, useGPU=use_gpu)
 
     if request.method == 'OPTIONS':
         # Allows GET requests from origin https://mydomain.com with
@@ -69,7 +68,7 @@ def pgan():
     grid = torchvision.utils.make_grid(generated_images.clamp(min=-1, max=1), scale_each=True, normalize=True)
     plt.imsave("/tmp/generated.jpeg", grid.permute(1, 2, 0).cpu().numpy())
 
-    with open("/tmp/generated.jpeg", rb) as f:
+    with open("/tmp/generated.jpeg", 'rb') as f:
         img_str = base64.b64encode(f.read())
     print(type(img_str))
     headers = {
@@ -101,6 +100,7 @@ def biggan(request, module, output, inputs, to_pred=42):
     import base64
     from io import BytesIO
     import io
+    import random
     import numpy as np
     import PIL.Image
     from scipy.stats import truncnorm
@@ -120,6 +120,7 @@ def biggan(request, module, output, inputs, to_pred=42):
 
     # init tensorflow
 
+    # anwer for CORS requests.
     if request.method == 'OPTIONS':
         # Allows GET requests from origin https://mydomain.com with
         # Authorization header
@@ -131,6 +132,7 @@ def biggan(request, module, output, inputs, to_pred=42):
             'Access-Control-Allow-Credentials': 'true'
         }
         return ('', 204, headers)
+    # helper functions
 
     def imgrid(imarray, cols=5, pad=1):
         if imarray.dtype != np.uint8:
@@ -191,54 +193,33 @@ def biggan(request, module, output, inputs, to_pred=42):
         return truncation * values
     # Load BigGAN 512 module.
 
-    # global module
-    pre = time.time()
-    """
-    if not module:
-        tf.reset_default_graph()
-        module = hub.Module('https://tfhub.dev/deepmind/biggan-512/2')
-    """
-
-    print("loadind module time ", time.time()-pre)
     # Sample random noise (z) and ImageNet label (y) inputs.
     batch_size = 1
-    truncation = 0.5  # scalar truncation value in [0.02, 1.0]
+    truncation = random.uniform(0.15, 0.85)  # scalar truncation value in [0.02, 1.0]
     z = truncated_z_sample(batch_size, truncation)
     z = np.asarray(z)  # noise sample
 
     label = np.asarray(to_pred)
     label = one_hot_if_needed(label, 1000)
 
-    # Call BigGAN on a dict of the inputs to generate a batch of images with shape
-    # [8, 512, 512, 3] and range [-1, 1].
-    print("creating smaples")
-    pre = time.time()
-
-    print("module ", time.time()-pre)
-    """
-    config = tf.ConfigProto(device_count={'GPU': 0})
-    initializer = tf.global_variables_initializer()
-    sess = tf.Session(config=config)
-    sess.run(initializer)
-    pre = time.time()
-
-    """
-    print("running session ", time.time()-pre)
-    # with graph.as_default():
     config = tf.ConfigProto(device_count={'GPU': 0})
     initializer = tf.global_variables_initializer()
 
+    # run session to generate image
+    pre = time.time()
     with tf.Session(config=config).as_default() as sess:
 
         sess.run(initializer)
         samples = sess.run(output, feed_dict={inputs['z']: z, inputs['y']: label, inputs['truncation']: truncation})
-    print("done runnign gan")
-    # samples = sess.run(samples)
+    print("done runnign gan, time needed: ", time.time()-pre, "s")
+
+    # postprocess images
     samples = [samples]
     samples = np.concatenate(samples, axis=0)
-    # assert samples.shape[0] == num
     samples = np.clip(((samples + 1) / 2.0) * 256, 0, 255)
     samples = np.uint8(samples)
+
+    # create,save transform image.
     pre = time.time()
     plt.imsave("/tmp/generated.png", imgrid(samples, cols=min(batch_size, 5)))
     print("creating image ", time.time()-pre)
