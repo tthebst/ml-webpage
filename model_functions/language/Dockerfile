@@ -2,7 +2,7 @@ FROM tensorflow/tensorflow:1.15.0-py3
 
 COPY requirements.txt /
 
-
+RUN pip install cython
 RUN pip install -r /requirements.txt
 
 RUN pip install torch

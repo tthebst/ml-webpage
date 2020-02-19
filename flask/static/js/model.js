@@ -261,13 +261,14 @@ function language_predict(result, spinner, fetch_url) {
         console.log(json)
         d = document.createElement('p');
         d.innerHTML = json;
+        res.appendChild(d);
 
 
         //add reload button
         li = document.createElement('p');
         console.log("hh");
         li.innerHTML = `<i class="fas fa-redo fa-1x text-right" style="padding-top: 0.3em"></i>`;
-        li.firstChild.addEventListener("click", function () { image_generate(result, spinner, fetch_url); }, false);
+        li.firstChild.addEventListener("click", function () { language_predict(result, spinner, fetch_url); }, false);
         document.getElementById(result).appendChild(li);
     });
 }
