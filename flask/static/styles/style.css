@@ -15,9 +15,11 @@
   	-moz-transition: all .3s ease; /* Firefox */
   	-o-transition: all .3s ease; /* IE 9 */
   	-ms-transition: all .3s ease; /* Opera */
-  	transition: all .3s ease;
+    transition: all .3s ease;
+    min-width: 10em;
+    min-height: 10em;
     position:relative;
-    z-index: 1;
+    
 }
 .img-hover img:hover {
     -webkit-backface-visibility: hidden;
@@ -27,6 +29,7 @@
     -ms-transform:scale(2.20); /* IE 9 */
     -o-transform:translatZ(0) scale(2.20); /* Opera */
     transform:translatZ(0) scale(2.20);
+    z-index: 1;
 }
   
 .img-hover:hover:after {

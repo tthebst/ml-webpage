@@ -30,6 +30,12 @@ def object_detect():
     return render_template('object_detect.html')
 
 
+@app.route('/language', methods=["GET", "POST"])
+def language():
+
+    return render_template('language.html')
+
+
 @app.route('/generative', methods=["GET", "POST"])
 def generative():
 
