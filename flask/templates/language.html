@@ -17,13 +17,22 @@
                     <p>This model is a generative model. The purpose of this model is to generate an artifical image of
                         a celebrity. It was trained progressivly to first generate low resolution images and at later
                         training stages produces higher resolution images. This model was released in 2017</p>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-default">To Translate</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Default" id="to_translate"
+                            aria-describedby="inputGroup-sizing-default">
+                    </div>
+
                 </div>
 
 
                 <div class="row" id="result1">
                     <div class="text-center">
                         <button type="button" id="pred_button" class="btn btn-dark"
-                            onclick='image_generate_pgan("result1","spinner1","http://localhost:5002/pgan")'>Generate</button>
+                            onclick='language_predict("result1","spinner1","http://localhost:5003/en2de")'>Translate</button>
                     </div>
                 </div>
             </div>

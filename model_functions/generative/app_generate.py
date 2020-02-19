@@ -43,9 +43,9 @@ def home():
 
 @app.route('/pgan', methods=["GET"])
 def pgan():
-    to_send = servingmodels.pgan(request)
+
     try:
-        pass
+        to_send = servingmodels.pgan(request)
 
     except Exception as e:
         print(e)
@@ -59,9 +59,9 @@ def pgan():
 
 @app.route('/dcgan', methods=["GET"])
 def dcgan():
-    to_send = servingmodels.dcgan(request)
+
     try:
-        pass
+        to_send = servingmodels.dcgan(request)
 
     except Exception as e:
         print(e)

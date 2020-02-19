@@ -1,9 +1,9 @@
 
 
-en2de = None
+en2de_model = None
 
 
-def pgan(request):
+def en2de(request, to_pred):
     """Responds to any HTTP request.
    Args:
         request(flask.Request): HTTP request object.
@@ -25,14 +25,14 @@ def pgan(request):
     from io import BytesIO
 
     # download & prepare model if necessary
-    global en2de
+    global en2de_model
 
     print(torch.__version__)
     # Download and save model
-    if not en2de:
+    if not en2de_model:
         # download model from GCS
         use_gpu = True if torch.cuda.is_available() else False
-        en2de = torch.hub.load('pytorch/fairseq', 'transformer.wmt19.en-de.single_model', tokenizer='moses', bpe='fastbpe')
+        en2de_model = torch.hub.load('pytorch/fairseq', 'transformer.wmt19.en-de.single_model', tokenizer='moses', bpe='fastbpe')
 
     # answers for CORS request
     if request.method == 'OPTIONS':
@@ -47,11 +47,11 @@ def pgan(request):
         }
         return ('', 204, headers)
 
-    de = en2de.translate('PyTorch Hub is a pre-trained model repository designed to facilitate research reproducibility.')
+    de = en2de_model.translate(to_pred)
 
     headers = {
         'Access-Control-Allow-Origin': '*'
     }
     print("done sending response")
 
-    return (jsonify(str(img_str)), 200, headers)
+    return (jsonify(de), 200, headers)

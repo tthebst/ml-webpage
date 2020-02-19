@@ -8,10 +8,10 @@ RUN pip install -r /requirements.txt
 RUN pip install torch
 RUN pip install torchvision
 
-ADD . /generative
+ADD . /language
 
 
 EXPOSE 5002
 
 
-CMD [ "python3","/generative/app_generate.py" ]
+CMD [ "python3","/language/app_language.py" ]
