@@ -19,10 +19,7 @@
                         training stages produces higher resolution images. This model was released in 2017</p>
 
 
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">To translate</span>
-                        </div>
+                    <div class="input-group container-fluid">
                         <textarea id="to_translate" class="form-control" aria-label="With textarea"></textarea>
                     </div>
 
@@ -31,8 +28,8 @@
 
 
                 <div class="row" id="result1">
-                    <div class="text-center">
-                        <button type="button" id="pred_button" class="btn btn-dark"
+                    <div class="text-center container-fluid">
+                        <button type="button" id="pred_button" class="btn btn-dark trainslate-btn"
                             onclick='language_predict("result1","spinner1","http://localhost:5003/en2de")'>Translate</button>
                     </div>
                 </div>

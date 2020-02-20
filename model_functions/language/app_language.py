@@ -30,6 +30,7 @@ def en2de():
         to_pred = json.loads(request.data.decode())
         print("to predict", to_pred)
         to_send = servingmodels.en2de(request, to_pred=str(to_pred['a']))
+        print(to_send)
 
     except Exception as e:
         print(e)
@@ -42,4 +43,5 @@ def en2de():
 
 
 if __name__ == '__main__':
+    app.config['JSON_AS_ASCII'] = False
     app.run(port=5003, debug=True, host="0.0.0.0",  threaded=False)

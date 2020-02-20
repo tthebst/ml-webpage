@@ -54,4 +54,6 @@ def en2de(request, to_pred):
     }
     print("done sending response")
 
+    print(de)
+
     return (jsonify(de), 200, headers)

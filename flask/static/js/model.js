@@ -232,7 +232,7 @@ function language_predict(result, spinner, fetch_url) {
 
 
     //remove predict button and add loader symbol
-    document.getElementById(result).innerHTML = `<div class="spinner-border text-dark" id=${spinner} role="status"><span class="sr-only"> Loading...</span ></div >`;
+    document.getElementById(result).innerHTML = `<div class="container-fluid text-center"><div class="spinner-border text-dark spinners" id=${spinner} role="status"><span class="sr-only"> Loading...</span ></div></div>`;
     console.log("fwetch");
     console.log(document.getElementById("to_translate").value);
     fetch(fetch_url, {
@@ -259,15 +259,17 @@ function language_predict(result, spinner, fetch_url) {
 
         //add predicted image
         console.log(json)
-        d = document.createElement('p');
+        d = document.createElement('div');
+        d.classList.add("container-fluid");
         d.innerHTML = json;
         res.appendChild(d);
 
 
         //add reload button
-        li = document.createElement('p');
+        li = document.createElement('div');
+        li.classList.add("container-fluid");
         console.log("hh");
-        li.innerHTML = `<i class="fas fa-redo fa-1x text-right" style="padding-top: 0.3em"></i>`;
+        li.innerHTML = `<i class="fas fa-redo fa-1x text-right float-left" style="padding-top: 0.3em"></i>`;
         li.firstChild.addEventListener("click", function () { language_predict(result, spinner, fetch_url); }, false);
         document.getElementById(result).appendChild(li);
     });

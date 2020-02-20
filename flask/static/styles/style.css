@@ -48,3 +48,12 @@
   -moz-filter: brightness(1.10) grayscale(100%) contrast(90%);
   filter: brightness(1.10) grayscale(100%); 
 }
+
+.trainslate-btn { 
+  margin-top: 0.5em;
+}
+
+.spinners {
+
+  margin-top: 0.5em;
+}
