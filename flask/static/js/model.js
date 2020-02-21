@@ -261,7 +261,7 @@ function language_predict(result, spinner, fetch_url) {
         console.log(json)
         d = document.createElement('div');
         d.classList.add("container-fluid");
-        d.innerHTML = json;
+        d.innerHTML = "<b>Translation:</b> <br>" + json;
         res.appendChild(d);
 
 
