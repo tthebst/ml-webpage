@@ -1,0 +1,21 @@
+WORKDIR:/Users/timgretler/projects/ml-webpage/ml-webpage
+
+#object detect:
+docker build -t object_detect_flask model_functions/object_detection/
+docker run --rm -p 5001:5001 object_detect_flask:latest
+
+#generative:
+docker build --memory-swap -1 -t generative_flask model_functions/generative/
+docker run --rm  -p  5003:5003 generative_flask:latest
+
+#language:
+docker build --memory-swap -1 -t language_flask model_functions/language/
+docker run --rm -it --entrypoint /bin/bash  -p  5003:5003 language_flask:latest
+
+#deepspeech
+docker build -t deeepspeech2 model_functions/language/deepspeech/
+docker run -p 5005:8888 -it --entrypoint /bin/bash deeepspeech2
+python3 deepspeech.pytorch/server.py 
+
+#webserver
+python3 flask/app.py 

@@ -8,7 +8,7 @@ startRecord.onclick = e => {
         .then(function (stream) {
             audioChunks = [];
             var options = {
-                mimeType: 'audio/ogg; codecs=vorbis'
+                mimeType: 'audio/wav'
             };
 
 
