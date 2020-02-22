@@ -5,7 +5,11 @@ import os
 import json
 import sys
 import servingmodels
+import tempfile
 import soundfile as sf
+import scipy.signal
+import requests
+import scipy.io.wavfile
 
 app = Flask(__name__)
 
@@ -37,17 +41,37 @@ def en2de():
 
 @app.route('/deepspeech_transcribe', methods=["GET", "POST", "OPTIONS"])
 def deepspeech():
-    print("HIU")
-    print(request.form)
     print(request.files)
-    print(request.files['data'])
-    data = request.files['data'].read()
-    print(data)
-    with open("/tmp/sound1.ogg", 'wb') as f:
-        f.write(data)
+    print('data' in request.files)
 
-    data, samplerate = sf.read('/tmp/sound1.ogg')
+    data = request.files['data'].read()
+
+    with tempfile.NamedTemporaryFile(mode='wb') as tmp:
+        print(tmp.name)
+        tmp.write(data)
+        print("written binary data to temporary file")
+        data, samplerate = sf.read(tmp.name)
+
     print(data, samplerate)
+    new_rate = 16000
+    number_of_samples = round(len(data) * float(new_rate) / samplerate)
+    data_16000 = scipy.signal.resample(data, number_of_samples)
+    print("resampled data")
+
+    with tempfile.NamedTemporaryFile(mode='wb', suffix='.wav') as tmp:
+        scipy.io.wavfile.write(tmp.name, new_rate, data_16000)
+        print("written resampled binary data to temporary file")
+        data, samplerate = sf.read(tmp.name)
+        payload = {'file_id': '1234'}
+        print(data, samplerate)
+        print(tmp.name)
+        resp = requests.post("http://172.18.0.2:5005/transcribe", files={'file': open(tmp.name, 'rb')}, verify=False)
+        print(resp.request.body)
+
+        print(resp.request.headers)
+        time.sleep(1)
+        print(resp.text)
+
     try:
         to_pred = json.loads(request.data.decode())
         print("to predict", to_pred)

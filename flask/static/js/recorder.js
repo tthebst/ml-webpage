@@ -1,30 +1,22 @@
-var audioChunks;
 
+var audio;
 startRecord.onclick = e => {
     startRecord.disabled = true;
     stopRecord.disabled = false;
     // This will prompt for permission if not allowed earlier
-    navigator.mediaDevices.getUserMedia({ audio: true })
+    var constraint = { audio: true, video: false };
+    navigator.mediaDevices.getUserMedia(constraint)
         .then(function (stream) {
-            audioChunks = [];
-            var options = {
-                mimeType: 'audio/wav'
-            };
+            const options = { mimeType: 'audio/mpeg' };
 
-
-
-            rec = new MediaRecorder(stream, options);
-            console.log(rec);
-            rec.ondataavailable = e => {
-                audioChunks.push(e.data);
-                if (rec.state == "inactive") {
-                    let blob = new Blob(audioChunks, { type: 'audio/wav' });
-                    recordedAudio.src = URL.createObjectURL(blob);
-                    recordedAudio.controls = true;
-                    recordedAudio.autoplay = true;
-                }
-            }
-            rec.start();
+            audioContext = new AudioContext;
+            input = audioContext.createMediaStreamSource(stream);
+            /* Create the Recorder object and configure to record mono sound (1 channel) Recording 2 channels will double the file size */
+            rec = new Recorder(input, {
+                numChannels: 1
+            })
+            //start the recording process 
+            rec.record()
         })
         .catch(e => console.log(e));
 }
@@ -32,7 +24,19 @@ stopRecord.onclick = e => {
     startRecord.disabled = false;
     stopRecord.disabled = true;
     rec.stop();
-    console.log(audioChunks)
+    rec.exportWAV(save_blob);
+    console.log(audio);
+}
+
+function save_blob(blob) {
+    console.log("saving blob");
+    console.log(blob);
+    audio = blob
+    recordedAudio.src = URL.createObjectURL(blob);
+    recordedAudio.controls = true;
+    recordedAudio.autoplay = true;
+
+
 }
 
 

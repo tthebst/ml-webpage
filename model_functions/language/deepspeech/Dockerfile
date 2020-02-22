@@ -26,4 +26,4 @@ RUN mkdir data; mkdir notebooks;
 
 RUN pip install flask matplotlib
 ADD librispeech_pretrained_v2.pth /workspace/models/deepspeech_final.pth
-CMD jupyter-notebook --ip="*" --no-browser --allow-root
+ADD server_deep.py /workspace/deepspeech.pytorch/server_deep.py
