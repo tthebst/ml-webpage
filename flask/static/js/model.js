@@ -274,3 +274,61 @@ function language_predict(result, spinner, fetch_url) {
         document.getElementById(result).appendChild(li);
     });
 }
+
+function deepspeech_transcribe(result, spinner, fetch_url) {
+
+
+
+    //remove predict button and add loader symbol
+    document.getElementById(result).innerHTML = `<div class="container-fluid text-center"><div class="spinner-border text-dark spinners" id=${spinner} role="status"><span class="sr-only"> Loading...</span ></div></div>`;
+    console.log("fwetch");
+    console.log(document.getElementById("to_translate").value);
+
+
+    //create FormData to send audio
+
+    var fd = new FormData();
+    fd.append('data', audioChunks[0]);
+
+    console.log(audioChunks[0])
+
+    console.log(fd);
+    fetch(fetch_url, {
+        method: "POST", body: fd
+    }).then((response) => {
+        if (!response.ok) {
+            d = document.createElement('h4');
+            d.innerHTML = "Something went wrong... Roboters still asleep";
+            d.classList.add("text-danger");
+            res = document.getElementById(result);
+            res.appendChild(d);
+
+        }
+        return response
+    }).then(function (a) {
+        document.getElementById(spinner).classList.add('invisible');
+        return a.text(); // call the json method on the response to get JSON
+    }).then(function (json) {
+        //txt = response.text()
+        res = document.getElementById(result);
+        var listDiv = res;
+        res.removeChild(res.firstChild);
+        res = document.getElementById(result);
+
+        //add predicted image
+        console.log(json)
+        d = document.createElement('div');
+        d.classList.add("container-fluid");
+        d.innerHTML = "<b>Translation:</b> <br>" + json;
+        res.appendChild(d);
+
+
+        //add reload button
+        li = document.createElement('div');
+        li.classList.add("container-fluid");
+        console.log("hh");
+        li.innerHTML = `<i class="fas fa-redo fa-1x text-right float-left" style="padding-top: 0.3em"></i>`;
+        li.firstChild.addEventListener("click", function () { deepspeech_transcribe(result, spinner, fetch_url); }, false);
+        document.getElementById(result).appendChild(li);
+    });
+}

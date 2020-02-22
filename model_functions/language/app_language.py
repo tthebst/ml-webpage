@@ -2,19 +2,12 @@ import time
 from flask import Flask, request
 from flask import render_template
 import os
-import tensorflow_hub as hub
-import tensorflow as tf
 import json
 import sys
 import servingmodels
-from tensorflow import keras
-app = Flask(__name__)
+import soundfile as sf
 
-module = None
-sess = None
-graph = None
-output = None
-inputs = None
+app = Flask(__name__)
 
 
 @app.route('/')
@@ -30,6 +23,35 @@ def en2de():
         to_pred = json.loads(request.data.decode())
         print("to predict", to_pred)
         to_send = servingmodels.en2de(request, to_pred=str(to_pred['a']))
+        print(to_send)
+
+    except Exception as e:
+        print(e)
+        headers = {
+            'Access-Control-Allow-Origin': '*'
+        }
+        print("error")
+        return ("ERROR OCCURED", 404, headers)
+    return to_send
+
+
+@app.route('/deepspeech_transcribe', methods=["GET", "POST", "OPTIONS"])
+def deepspeech():
+    print("HIU")
+    print(request.form)
+    print(request.files)
+    print(request.files['data'])
+    data = request.files['data'].read()
+    print(data)
+    with open("/tmp/sound1.ogg", 'wb') as f:
+        f.write(data)
+
+    data, samplerate = sf.read('/tmp/sound1.ogg')
+    print(data, samplerate)
+    try:
+        to_pred = json.loads(request.data.decode())
+        print("to predict", to_pred)
+        to_send = servingmodels.en2de(request, to_pred=to_pred['a'])
         print(to_send)
 
     except Exception as e:

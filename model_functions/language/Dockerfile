@@ -1,12 +1,21 @@
-FROM tensorflow/tensorflow:1.15.0-py3
+FROM ubuntu:18.04
+
+
 
 COPY requirements.txt /
 
-RUN pip install cython
-RUN pip install -r /requirements.txt
+RUN apt-get update
+RUN apt-get install -y python3-pip
+RUN pip3 install cython
+RUN pip3 install -r /requirements.txt
 
-RUN pip install torch
-RUN pip install torchvision
+RUN pip3 install torch
+RUN pip3 install torchvision
+
+RUN apt-get install -y libsndfile1
+
+RUN pip3 install soundfile
+
 
 ADD . /language
 

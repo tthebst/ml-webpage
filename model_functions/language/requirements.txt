@@ -10,3 +10,4 @@ numpy
 tensorflow-hub
 sacremoses
 subword_nmt
+soundfile

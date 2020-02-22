@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block content %}
 
 
@@ -71,12 +72,22 @@
                         images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on
                         ImageNet1K dataset. This model was released in 2018 and achieves <b>state-of-the-art</b>
                         accuracy.</p>
+                    <div>
+                        <p><b>Record Audio to transcribe:</b></p><br>
+                        <p>
+                            <button id="startRecord" class="btn btn-danger">start</button>
+                            <button id="stopRecord" disabled class="btn btn-danger">stop</button>
+                        </p>
+                        <p>
+                            <audio id=recordedAudio></audio>
+                        </p>
+                    </div>
                 </div>
 
                 <div class="row" id="result2">
                     <div class="text-center">
                         <button type="button" id="pred_button" class="btn btn-dark"
-                            onclick='image_generate_pgan("result2","spinner2","http://localhost:5002/dcgan")'>Generate</button>
+                            onclick='deepspeech_transcribe("result2","spinner2","http://localhost:5003/deepspeech_transcribe")'>Transcribe</button>
                     </div>
                 </div>
             </div>
@@ -90,6 +101,7 @@
     </div> <!-- /container -->
 
 </main>
+
 
 
 
