@@ -304,12 +304,6 @@ function deepspeech_transcribe(result, spinner, fetch_url) {
             res.appendChild(d);
 
         }
-        else {
-            d = document.createElement('div');
-            d.classList.add("container-fluid");
-            d.innerHTML = "<b>Translation:</b> <br>" + json;
-            res.appendChild(d);
-        }
         return response
     }).then(function (a) {
         document.getElementById(spinner).classList.add('invisible');
@@ -321,6 +315,17 @@ function deepspeech_transcribe(result, spinner, fetch_url) {
         res.removeChild(res.firstChild);
         res = document.getElementById(result);
 
+
+
+        //add predicted image
+
+
+        console.log(json);
+        j = JSON.parse(json);
+        d = document.createElement('div');
+        d.classList.add("container-fluid");
+        d.innerHTML = "<b>Translation:</b> <br>" + j.substring(3, j.length - 3);
+        res.appendChild(d);
 
 
         //add reload button
