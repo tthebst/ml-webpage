@@ -11,8 +11,20 @@ import soundfile as sf
 import scipy.signal
 import requests
 import scipy.io.wavfile
+import logging
 
 app = Flask(__name__)
+
+"""
+
+@app.before_request
+def load_models():
+    import torch
+    global en2de_model
+    global en2fr_model
+    en2de_model = torch.hub.load('pytorch/fairseq', 'transformer.wmt19.en-de.single_model', tokenizer='moses', bpe='fastbpe')
+    en2fr_model = torch.hub.load('pytorch/fairseq', 'transformer.wmt14.en-fr', tokenizer='moses', bpe='subword_nmt')
+"""
 
 
 @app.route('/')
@@ -25,13 +37,34 @@ def home():
 def en2de():
 
     try:
+        print(type(request.data.decode()))
         to_pred = json.loads(request.data.decode())
         print("to predict", to_pred)
         to_send = servingmodels.en2de(request, to_pred=str(to_pred['a']))
         print(to_send)
 
     except Exception as e:
-        print(e)
+        logger.exception(e)
+        headers = {
+            'Access-Control-Allow-Origin': '*'
+        }
+        print("error")
+        return ("ERROR OCCURED", 404, headers)
+    return to_send
+
+
+@app.route('/en2fr', methods=["GET", "POST"])
+def en2fr():
+
+    try:
+        print(type(request.data.decode()))
+        to_pred = json.loads(request.data.decode())
+        print("to predict", to_pred)
+        to_send = servingmodels.en2fr(request, to_pred=str(to_pred['a']))
+        print(to_send)
+
+    except Exception as e:
+        logger.exception(e)
         headers = {
             'Access-Control-Allow-Origin': '*'
         }
@@ -57,6 +90,7 @@ def deepspeech():
         return ('', 204, headers)
 
     try:
+
         data = request.files['data'].read()
 
         with tempfile.NamedTemporaryFile(mode='wb') as tmp:
@@ -75,7 +109,7 @@ def deepspeech():
             data, samplerate = sf.read(tmp.name)
             payload = {'file_id': '1234'}
 
-            resp = requests.post("http://172.18.0.2:5005/transcribe", files={'file': open(tmp.name, 'rb')}, verify=False)
+            resp = requests.post("http://172.18.0.3:5005/transcribe", files={'file': open(tmp.name, 'rb')}, verify=False)
 
         transcript = json.loads(resp.text)["transcription"]
 
@@ -95,4 +129,6 @@ def deepspeech():
 
 if __name__ == '__main__':
     app.config['JSON_AS_ASCII'] = False
-    app.run(port=5003, debug=True, host="0.0.0.0",  threaded=False)
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
+    app.run(port=5003, debug=True, host="0.0.0.0",  threaded=True)

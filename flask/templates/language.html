@@ -12,12 +12,13 @@
         <div class="row mt-5" style="height: 25em;">
             <div class="col m-3">
                 <div class="row">
-                    <h2 class="text-center">Progressive Growing GANs</h2>
+                    <h2 class="text-center">Transformer Model</h2>
                 </div>
                 <div class="row">
-                    <p>This model is a generative model. The purpose of this model is to generate an artifical image of
-                        a celebrity. It was trained progressivly to first generate low resolution images and at later
-                        training stages produces higher resolution images. This model was released in 2017</p>
+                    <p>This is an award winning English German translation model developed by facebook research. It uses
+                        attention
+                        instead of memory units and prodices <b>state-of-the-art</b>results. This model was released in
+                        2018 and won the English German translation competition.</p>
 
 
                     <div class="input-group container-fluid">
@@ -37,42 +38,38 @@
             </div>
             <div class="col m-3">
                 <div class="row">
-                    <h2 class="text-center">BigGan</h2>
+                    <h2 class="text-center">Transformer Model</h2>
                 </div>
                 <div class="row">
-                    <p>This model is a generative model. The purpose of this model is to generate an artifical image of
-                        a class in the imagenet dataset. You can choose a class of a image to generate. This model was
-                        introduced in 2018.</p>
-                    <div class="form-group">
+                    <p>This model is similar to the previous one. It translates English to French also using attention
+                        and obtains <b>state-of-the-art</b> resutls. This model was also released in 2018. </p>
 
-                        <label for="exampleFormControlSelect1">Example select</label>
-                        <select class="form-control" id="biggan_options">
-                            {% for i in range(0,idx|length) %}
-                            <option value="{{ idx[i] }}">{{ label[i] }}</option>
-                            {% else %}
-                            no true items
-                            {% endfor %}
-                        </select>
+
+                    <div class="input-group container-fluid">
+                        <textarea id="to_translate" class="form-control" aria-label="With textarea"></textarea>
                     </div>
+
+
                 </div>
 
+
                 <div class="row" id="result3">
-                    <div class="text-center">
-                        <button type="button" id="pred_button" class="btn btn-dark"
-                            onclick='image_generate("result3","spinner3","http://localhost:5002/biggan")'>Generate</button>
+                    <div class="text-center container-fluid">
+                        <button type="button" id="pred_button" class="btn btn-dark trainslate-btn"
+                            onclick='language_predict("result3","spinner3","http://localhost:5003/en2fr")'>Translate</button>
                     </div>
                 </div>
             </div>
             <div class="col m-3">
                 <div class="row">
-                    <h2 class="text-center">ResNeXt</h2>
+                    <h2 class="text-center">DeepSpeech</h2>
                 </div>
                 <div class="row">
-                    <p>ResNeXt models are pre-trained in weakly-supervised fashion on 940 million public
-                        images with 1.5K hashtags matching with 1000 ImageNet1K synsets, followed by fine-tuning on
-                        ImageNet1K dataset. This model was released in 2018 and achieves <b>state-of-the-art</b>
-                        accuracy.</p>
-                    <div>
+                    <p>This is the deepspeech model from mozilla. It can translate speech to text. It uses memory units
+                        like LSTM's to transcribe the input. The deepspeech was revisited over time, but the initial
+                        version was released in 2015. If you notice bad translations, it is due to skew towards their
+                        training set. These are research model and not made real-world usage.</p>
+                    <div class="text-center container-fluid">
                         <p><b>Record Audio to transcribe:</b></p><br>
                         <p>
                             <button id="startRecord" class="btn btn-danger">start</button>
@@ -85,7 +82,7 @@
                 </div>
 
                 <div class="row" id="result2">
-                    <div class="text-center">
+                    <div class="text-center container-fluid">
                         <button type="button" id="pred_button" class="btn btn-dark"
                             onclick='deepspeech_transcribe("result2","spinner2","http://localhost:5003/deepspeech_transcribe")'>Transcribe</button>
                     </div>
@@ -96,7 +93,7 @@
 
         </div>
 
-        <hr>
+
 
     </div> <!-- /container -->
 
