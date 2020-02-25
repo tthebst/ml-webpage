@@ -106,7 +106,6 @@ function image_detect(result, spinner, fetch_url) {
 
         //add predicted image
         d = document.createElement('div');
-        d.classList.add("img-hover");
         var img = new Image();
         img.src = "data:image/jpg;base64," + json.substring(3, json.length - 7);
         img.classList.add("img-fluid");

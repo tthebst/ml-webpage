@@ -28,36 +28,21 @@
 
         </div>
         <div class="row mt-5" style="height: 25em;">
-            <div class="col m-3">
-                <div class="row">
-                    <h2 class="text-center">RCNN</h2>
-                </div>
-                <div class="row">
-                    <p>This is a object detection model. It marks the detected objects with boxes and can also label
-                        them. It uses convolution neural networks and their receptive field to perform interference
-                        faster. This modeltype was released in 2016. This can take up to one minute!!!</object></p>
-                </div>
 
-
-                <div class="row" id="result2">
-                    <div class="text-center">
-                        <button type="button" id="pred_button" class="btn btn-dark"
-                            onclick='image_detect("result2","spinner2","http://localhost:5001/fastrnn2")'>Predict</button>
-                    </div>
-                </div>
-            </div>
             <div class="col m-3">
                 <div class="row">
                     <h2 class="text-center">FasterRCNN</h2>
                 </div>
                 <div class="row">
-                    <p>This is slimmer version of the other object detection model. It uses SSD (Singe Shot MultiBox
+                    <p>This is a object detection model. It marks the detected objects with boxes and can also label
+                        them. It uses convolution neural networks and their receptive field to perform interference
+                        faster. It uses SSD (Singe Shot MultiBox
                         Detector) to speed up inference.</p>
                 </div>
                 <div class="row" id="result3">
                     <div class="text-center">
                         <button type="button" id="pred_button" class="btn btn-dark"
-                            onclick='image_detect("result3","spinner3","http://localhost:5001/fastrnn")'>Predict</button>
+                            onclick='image_detect("result3","spinner3","https://objectdetectflask-ch3s33ctwq-ez.a.run.app/fastrnn")'>Predict</button>
                     </div>
                 </div>
 

@@ -1,5 +1,6 @@
 
 
+from memory_profiler import profile
 pgan_model = None
 # module = None
 dcgan_model = None
@@ -153,7 +154,8 @@ def dcgan(request):
     return (jsonify(str(img_str)), 200, headers)
 
 
-def biggan(request, module, output, inputs, graph, to_pred=42):
+@profile
+def biggan(request, output, inputs, graph, to_pred=42):
     """Responds to any HTTP request.
    Args:
         request(flask.Request): HTTP request object.
@@ -177,15 +179,15 @@ def biggan(request, module, output, inputs, graph, to_pred=42):
     import random
     import numpy as np
     import PIL.Image
+    import gc
     from scipy.stats import truncnorm
+
     # import tensorflow.compat.v1 as tf
     # To make tf 2.0 compatible with tf1.0 code, we disable the tf2.0 functionalities
     # tf.disable_eager_execution()
     import tensorflow as tf
-    import tensorflow_hub as hub
     import matplotlib.pyplot as plt
     # download & prepare model if necessary
-    global biggan_model
     import os
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
@@ -279,6 +281,7 @@ def biggan(request, module, output, inputs, graph, to_pred=42):
     # run session to generate image
     pre = time.time()
     print("graph before exec", graph)
+    gc.collect()
     with graph.as_default():
         config = tf.ConfigProto(device_count={'GPU': 0}, intra_op_parallelism_threads=1,
                                 inter_op_parallelism_threads=1)

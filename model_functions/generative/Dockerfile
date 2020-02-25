@@ -10,8 +10,9 @@ RUN pip install torchvision
 
 ADD . /generative
 
+RUN pip install gunicorn memory_profiler
 
-EXPOSE 5002
 
-
-CMD [ "python3","/generative/app_generate.py" ]
+WORKDIR /generative
+CMD exec gunicorn  --bind 0.0.0.0:5002 --workers 1 --threads 2 app_generate:app
+#CMD [ "python3","/generative/app_generate.py" ]

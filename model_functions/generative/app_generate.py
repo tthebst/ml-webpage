@@ -7,33 +7,36 @@ import tensorflow as tf
 import json
 import sys
 import servingmodels
-from tensorflow import keras
 import logging
+from memory_profiler import profile
+import gc
+print(__name__)
 app = Flask(__name__)
 
 module = None
-sess = None
 graph = None
 output = None
 inputs = None
 
 # prepares biggan module for faster later use
 @app.before_first_request
+@profile
 def gen_module():
     global module
-    global sess
     global graph
     global output
     global inputs
 
     pre = time.time()
 
-    module = hub.Module('https://tfhub.dev/deepmind/biggan-512/2')
+    module = hub.Module('/generative/3')
 
     inputs = {k: tf.placeholder(v.dtype, v.get_shape().as_list(), k)
               for k, v in module.get_input_info_dict().items()}
     output = module(inputs)
+    gc.collect()
     graph = tf.get_default_graph()
+    del module
     print("graph befor first req", graph)
 
 
@@ -77,11 +80,13 @@ def dcgan():
 
 
 @app.route('/biggan', methods=["GET", "POST"])
+@profile
 def biggan():
 
     try:
         to_pred = json.loads(request.data.decode())
-        to_send = servingmodels.biggan(request, module, output, inputs, graph, to_pred=int(to_pred['a']))
+        gc.collect()
+        to_send = servingmodels.biggan(request, output, inputs, graph, to_pred=int(to_pred['a']))
     except Exception as e:
 
         logger.exception(e)
@@ -90,6 +95,7 @@ def biggan():
         }
         print("error")
         return ("ERROR OCCURED", 404, headers)
+
     return to_send
 
 

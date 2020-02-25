@@ -13,4 +13,7 @@ EXPOSE 5001
 
 RUN ls /object_detection
 
-CMD [ "python3","/object_detection/app_detect.py" ]
+RUN pip install gunicorn
+WORKDIR /object_detection
+CMD exec gunicorn  --bind 0.0.0.0:5001 --workers 1 --threads 2 app_detect:app
+#CMD [ "python3","/object_detection/app_detect.py" ]
