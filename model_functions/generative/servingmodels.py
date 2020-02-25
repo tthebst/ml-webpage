@@ -153,7 +153,7 @@ def dcgan(request):
     return (jsonify(str(img_str)), 200, headers)
 
 
-def biggan(request, module, output, inputs, to_pred=42):
+def biggan(request, module, output, inputs, graph, to_pred=42):
     """Responds to any HTTP request.
    Args:
         request(flask.Request): HTTP request object.
@@ -276,15 +276,17 @@ def biggan(request, module, output, inputs, to_pred=42):
     label = np.asarray(to_pred)
     label = one_hot_if_needed(label, 1000)
 
-    config = tf.ConfigProto(device_count={'GPU': 0})
-    initializer = tf.global_variables_initializer()
-
     # run session to generate image
     pre = time.time()
-    with tf.Session(config=config).as_default() as sess:
+    print("graph before exec", graph)
+    with graph.as_default():
+        config = tf.ConfigProto(device_count={'GPU': 0}, intra_op_parallelism_threads=1,
+                                inter_op_parallelism_threads=1)
+        initializer = tf.global_variables_initializer()
+        with tf.Session(config=config, graph=graph) as sess:
 
-        sess.run(initializer)
-        samples = sess.run(output, feed_dict={inputs['z']: z, inputs['y']: label, inputs['truncation']: truncation})
+            sess.run(initializer)
+            samples = sess.run(output, feed_dict={inputs['z']: z, inputs['y']: label, inputs['truncation']: truncation})
     print("done runnign gan, time needed: ", time.time()-pre, "s")
 
     # postprocess images

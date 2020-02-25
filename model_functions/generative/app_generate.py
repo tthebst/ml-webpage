@@ -8,6 +8,7 @@ import json
 import sys
 import servingmodels
 from tensorflow import keras
+import logging
 app = Flask(__name__)
 
 module = None
@@ -27,12 +28,13 @@ def gen_module():
 
     pre = time.time()
 
-    tf.reset_default_graph()
     module = hub.Module('https://tfhub.dev/deepmind/biggan-512/2')
 
     inputs = {k: tf.placeholder(v.dtype, v.get_shape().as_list(), k)
               for k, v in module.get_input_info_dict().items()}
     output = module(inputs)
+    graph = tf.get_default_graph()
+    print("graph befor first req", graph)
 
 
 @app.route('/')
@@ -45,6 +47,7 @@ def home():
 def pgan():
 
     try:
+        print("graph calling servingmodel", graph)
         to_send = servingmodels.pgan(request)
 
     except Exception as e:
@@ -78,9 +81,10 @@ def biggan():
 
     try:
         to_pred = json.loads(request.data.decode())
-        to_send = servingmodels.biggan(request, module, output, inputs, to_pred=int(to_pred['a']))
+        to_send = servingmodels.biggan(request, module, output, inputs, graph, to_pred=int(to_pred['a']))
     except Exception as e:
-        print(e)
+
+        logger.exception(e)
         headers = {
             'Access-Control-Allow-Origin': '*'
         }
@@ -90,4 +94,6 @@ def biggan():
 
 
 if __name__ == '__main__':
-    app.run(port=5002, debug=True, host="0.0.0.0",  threaded=False)
+    logging.basicConfig(level=logging.DEBUG)
+    logger = logging.getLogger(__name__)
+    app.run(port=5002, debug=True, host="0.0.0.0",  threaded=True)
