@@ -56,8 +56,6 @@ def en2de(request, to_pred):
     }
     print("done sending response")
 
-    print(de)
-
     return (jsonify(de), 200, headers)
 
 
@@ -105,13 +103,11 @@ def en2fr(request, to_pred):
         }
         return ('', 204, headers)
 
-    de = en2fr_model.translate(to_pred)
+    de = en2fr_model.translate(to_pred, beam=5)
 
     headers = {
         'Access-Control-Allow-Origin': '*'
     }
     print("done sending response")
-
-    print(de)
 
     return (jsonify(de), 200, headers)

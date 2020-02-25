@@ -6,7 +6,7 @@ docker run --rm -p 5001:5001 object_detect_flask:latest
 
 #generative:
 docker build --memory-swap -1 -t generative_flask model_functions/generative/
-docker run --rm  -p  5003:5003 generative_flask:latest
+docker run --rm  -p  5002:5002 generative_flask:latest
 
 #language:
 docker build --memory-swap -1 -t language_flask model_functions/language/
