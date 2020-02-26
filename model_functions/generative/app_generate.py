@@ -84,6 +84,7 @@ def dcgan():
 def biggan():
 
     try:
+        print("got biggan request", request)
         to_pred = json.loads(request.data.decode())
         gc.collect()
         to_send = servingmodels.biggan(request, output, inputs, graph, to_pred=int(to_pred['a']))
