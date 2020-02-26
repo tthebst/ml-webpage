@@ -109,10 +109,9 @@ def generative_biggan():
     print("got post to bgigan")
     print(request.data)
     resp = requests.post("http://172.18.0.4:5002/biggan", data=request.data, verify=False)
-    print(resp)
 
     print(resp.json())
-    return resp
+    return (resp.text, resp.status_code, resp.headers.items())
 
 
 if __name__ == '__main__':

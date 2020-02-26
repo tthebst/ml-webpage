@@ -12,7 +12,10 @@ RUN pip3 install -r /requirements.txt
 
 ADD . /app
 
+RUN ls
+
 
 
 WORKDIR /app
-CMD exec gunicorn  --bind 0.0.0.0:5002 --workers 1 --threads 2 app:app
+RUN ls
+CMD exec gunicorn  --bind 0.0.0.0:5000 --workers 1 --threads 2 app:app
