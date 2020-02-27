@@ -29,7 +29,7 @@ def gen_module():
 
     pre = time.time()
 
-    module = hub.Module('/generative/3')
+    module = hub.Module('/generative/2')
 
     inputs = {k: tf.placeholder(v.dtype, v.get_shape().as_list(), k)
               for k, v in module.get_input_info_dict().items()}

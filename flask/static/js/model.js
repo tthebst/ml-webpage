@@ -120,6 +120,7 @@ function image_detect(result, spinner, fetch_url) {
     });
 }
 
+var gen_resp_ok = true;
 function image_generate(result, spinner, fetch_url) {
 
 
@@ -131,6 +132,7 @@ function image_generate(result, spinner, fetch_url) {
     fetch(fetch_url, {
         method: "POST", body: JSON.stringify({ a: document.getElementById("biggan_options").value })
     }).then((response) => {
+        gen_resp_ok = response.ok;
         if (!response.ok) {
             d = document.createElement('h4');
             d.innerHTML = "Something went wrong... Roboters still asleep";
@@ -144,6 +146,7 @@ function image_generate(result, spinner, fetch_url) {
         document.getElementById(spinner).classList.add('invisible');
         return a.text(); // call the json method on the response to get JSON
     }).then(function (json) {
+
         //txt = response.text()
         res = document.getElementById(result);
         var listDiv = res;
@@ -151,16 +154,17 @@ function image_generate(result, spinner, fetch_url) {
         res = document.getElementById(result);
 
         //add predicted image
-
-        d = document.createElement('div');
-        d.classList.add("img-hover");
-        var img = new Image();
-        console.log(json)
-        img.src = "data:image/png;base64," + json.substring(3, json.length - 3);
-        console.log(img.src)
-        img.classList.add("img-fluid");
-        d.appendChild(img);
-        res.appendChild(d);
+        if (gen_resp_ok) {
+            d = document.createElement('div');
+            d.classList.add("img-hover");
+            var img = new Image();
+            console.log(json)
+            img.src = "data:image/png;base64," + json.substring(3, json.length - 3);
+            console.log(img.src)
+            img.classList.add("img-fluid");
+            d.appendChild(img);
+            res.appendChild(d);
+        };
 
 
         //add reload button
@@ -225,7 +229,7 @@ function image_generate_pgan(result, spinner, fetch_url) {
 }
 
 
-
+var lang_resp_ok = true;
 function language_predict(result, spinner, fetch_url) {
 
 
@@ -237,6 +241,7 @@ function language_predict(result, spinner, fetch_url) {
     fetch(fetch_url, {
         method: "POST", body: JSON.stringify({ a: document.getElementById("to_translate").value })
     }).then((response) => {
+        lang_resp_ok = response.ok;
         if (!response.ok) {
             d = document.createElement('h4');
             d.innerHTML = "Something went wrong... Roboters still asleep";
@@ -257,12 +262,13 @@ function language_predict(result, spinner, fetch_url) {
         res = document.getElementById(result);
 
         //add predicted image
-        console.log(json)
-        d = document.createElement('div');
-        d.classList.add("container-fluid");
-        d.innerHTML = "<b>Translation:</b> <br>" + json;
-        res.appendChild(d);
-
+        if (lang_resp_ok) {
+            console.log(json)
+            d = document.createElement('div');
+            d.classList.add("container-fluid");
+            d.innerHTML = "<b>Translation:</b> <br>" + json;
+            res.appendChild(d);
+        };
 
         //add reload button
         li = document.createElement('div');
@@ -273,7 +279,7 @@ function language_predict(result, spinner, fetch_url) {
         document.getElementById(result).appendChild(li);
     });
 }
-
+var ds_resp_ok = true;
 function deepspeech_transcribe(result, spinner, fetch_url) {
 
 
@@ -295,6 +301,7 @@ function deepspeech_transcribe(result, spinner, fetch_url) {
     fetch(fetch_url, {
         method: "POST", body: fd
     }).then((response) => {
+        ds_resp_ok = response.ok;
         if (!response.ok) {
             d = document.createElement('h4');
             d.innerHTML = "Something went wrong... Roboters still asleep";
@@ -318,15 +325,15 @@ function deepspeech_transcribe(result, spinner, fetch_url) {
 
         //add predicted image
 
+        if (ds_resp_ok) {
+            console.log(json);
+            j = JSON.parse(json);
+            d = document.createElement('div');
+            d.classList.add("container-fluid");
+            d.innerHTML = "<b>Translation:</b> <br>" + j.substring(3, j.length - 3);
+            res.appendChild(d);
 
-        console.log(json);
-        j = JSON.parse(json);
-        d = document.createElement('div');
-        d.classList.add("container-fluid");
-        d.innerHTML = "<b>Translation:</b> <br>" + j.substring(3, j.length - 3);
-        res.appendChild(d);
-
-
+        };
         //add reload button
         li = document.createElement('div');
         li.classList.add("container-fluid");

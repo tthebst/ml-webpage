@@ -38,6 +38,7 @@ def home():
 def en2de():
 
     try:
+
         print(type(request.data.decode()))
         to_pred = json.loads(request.data.decode())
         print("to predict", to_pred)

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<main role="main">
+
+
+    <div class="container" style="margin-top: 10em;">
+        <!-- Example row of columns -->
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Why this webpage </h2>
+                <p>The main reason I created this page was for learning purposes and to experiment with different
+                    deployment methods for machine learning model of different sizes. For example I used cloud functions
+                    and cloud run both provided by Google Cloud Platform. Larger models are part of the docker
+                    deployment of this webpage. This webpage is still under development and I plan to add more models in
+                    the future.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h2>Ressources</h2>
+                <p>The code for this webpage is available on <a href="https://github.com/tthebst/ml-webpage">Github</a>.
+                    The model used is always displayed next to the model. If you have any suggestions you can email me.
+                </p>
+            </div>
+            <div class="col-md-4">
+                <h2>About me</h2>
+                <p>I'm Tim and I currently study at university. For more information about me you can visit my <a
+                        href="http://www.timgretler.ch">Webpage.</a></p>
+            </div>
+
+        </div>
+
+
+
+    </div> <!-- /container -->
+
+</main>
+
+
+
+{% endblock %}
