@@ -2,7 +2,7 @@ version: "3"
 services:
   webappp:
     build: ./flask/
-    image: webapp:latest
+    image: eu.gcr.io/ml-webpage-264418/webapp:latest
     ports:
       - "5000:5000"
     container_name: webappp
@@ -15,7 +15,7 @@ services:
       - deepspeech
   generative:
     build: ./model_functions/generative
-    image: generative:latest
+    image: eu.gcr.io/ml-webpage-264418/generative:latest
     container_name: generative
     networks:
       app:
@@ -24,7 +24,7 @@ services:
       - "5002:5002"
   language:
     build: ./model_functions/language
-    image: language:latest
+    image: eu.gcr.io/ml-webpage-264418/language:latest
     container_name: language
     networks:
       app:
@@ -33,7 +33,7 @@ services:
       - "5003:5003"
   deepspeech:
     build: ./model_functions/language/deepspeech
-    image: deepspeech:latest
+    image: eu.gcr.io/ml-webpage-264418/deepspeech:latest
     container_name: deepspeech
     networks:
       app:
