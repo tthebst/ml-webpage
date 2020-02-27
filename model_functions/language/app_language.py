@@ -12,6 +12,7 @@ import scipy.signal
 import requests
 import scipy.io.wavfile
 import logging
+import docker
 
 app = Flask(__name__)
 
@@ -108,8 +109,10 @@ def deepspeech():
             print("written resampled binary data to temporary file")
             data, samplerate = sf.read(tmp.name)
             payload = {'file_id': '1234'}
-
-            resp = requests.post("http://172.18.0.3:5005/transcribe", files={'file': open(tmp.name, 'rb')}, verify=False)
+            # client = docker.DockerClient()
+            # container = client.containers.get("deepspeech")
+            # ip_add = container.attrs['NetworkSettings']['IPAddress']
+            resp = requests.post("http://172.20.0.5:5005/transcribe", files={'file': open(tmp.name, 'rb')}, verify=False)
 
         transcript = json.loads(resp.text)["transcription"]
 

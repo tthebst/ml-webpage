@@ -12,3 +12,4 @@ sacremoses
 subword_nmt
 soundfile
 pyopenssl
+docker
