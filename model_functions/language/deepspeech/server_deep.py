@@ -14,6 +14,24 @@ app = Flask(__name__)
 ALLOWED_EXTENSIONS = set(['.wav', '.mp3', '.ogg', '.webm'])
 
 
+@app.before_first_request
+def build():
+    global model, spect_parser, decoder, device
+
+    logging.getLogger().setLevel(logging.DEBUG)
+
+    logging.info('Setting up server...')
+    torch.set_grad_enabled(False)
+    device = torch.device("cpu")
+    model = load_model(device, "/workspace/models/deepspeech_final.pth", False)
+
+    decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
+
+    spect_parser = SpectrogramParser(model.audio_conf, normalize=True)
+    logging.info('Server initialised')
+    #app.run(host="0.0.0.0", port="5005", debug=True, use_reloader=False)
+
+
 @app.route('/transcribe', methods=['POST'])
 def transcribe_file():
     if request.method == 'POST':
@@ -44,41 +62,11 @@ def transcribe_file():
                                           model=model,
                                           decoder=decoder,
                                           device=device,
-                                          use_half=args.half)
+                                          use_half=False)
             logging.info('File transcribed')
             res['status'] = "OK"
             res['transcription'] = transcription
             return jsonify(res)
-
-
-def main():
-    import argparse
-    global model, spect_parser, decoder, args, device
-    parser = argparse.ArgumentParser(description='DeepSpeech transcription server')
-    parser.add_argument('--host', type=str, default='0.0.0.0', help='Host to be used by the server')
-    parser.add_argument('--port', type=int, default=8888, help='Port to be used by the server')
-    parser = add_inference_args(parser)
-    parser = add_decoder_args(parser)
-    args = parser.parse_args()
-    logging.getLogger().setLevel(logging.DEBUG)
-
-    logging.info('Setting up server...')
-    torch.set_grad_enabled(False)
-    device = torch.device("cuda" if args.cuda else "cpu")
-    model = load_model(device, args.model_path, args.half)
-
-    if args.decoder == "beam":
-        from decoder import BeamCTCDecoder
-
-        decoder = BeamCTCDecoder(model.labels, lm_path=args.lm_path, alpha=args.alpha, beta=args.beta,
-                                 cutoff_top_n=args.cutoff_top_n, cutoff_prob=args.cutoff_prob,
-                                 beam_width=args.beam_width, num_processes=args.lm_workers)
-    else:
-        decoder = GreedyDecoder(model.labels, blank_index=model.labels.index('_'))
-
-    spect_parser = SpectrogramParser(model.audio_conf, normalize=True)
-    logging.info('Server initialised')
-    app.run(host=args.host, port=args.port, debug=True, use_reloader=False)
 
 
 if __name__ == "__main__":

@@ -27,3 +27,10 @@ RUN mkdir data; mkdir notebooks;
 RUN pip install flask matplotlib
 ADD librispeech_pretrained_v2.pth /workspace/models/deepspeech_final.pth
 ADD server_deep.py /workspace/deepspeech.pytorch/server_deep.py
+
+RUN pip install gunicorn
+
+
+WORKDIR /workspace/deepspeech.pytorch/
+RUN ls
+CMD exec gunicorn  --bind 0.0.0.0:5005 --workers 1 --threads 2 server_deep:app

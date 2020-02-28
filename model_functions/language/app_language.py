@@ -113,7 +113,7 @@ def deepspeech():
             # client = docker.DockerClient()
             # container = client.containers.get("deepspeech")
             # ip_add = container.attrs['NetworkSettings']['IPAddress']
-            resp = requests.post("http://172.20.0.5:5005/transcribe", files={'file': open(tmp.name, 'rb')}, verify=False)
+            resp = requests.post(" https://deepspeech-ch3s33ctwq-ez.a.run.app/transcribe", files={'file': open(tmp.name, 'rb')}, verify=False)
 
         transcript = json.loads(resp.text)["transcription"]
 

@@ -60,7 +60,6 @@ def generative():
 
 @app.route('/generative/biggan', methods=["GET", "POST"])
 def generative_biggan():
-    raise Exception
     print("got post to bgigan")
     print(request.data)
     # client = docker.DockerClient()

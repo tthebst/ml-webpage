@@ -13,6 +13,11 @@ services:
       - generative
       - language
       - deepspeech
+    volumes:
+      - certificates:/certs
+
+  certbot:
+
   generative:
     build: ./model_functions/generative
     image: eu.gcr.io/ml-webpage-264418/generative:latest
@@ -46,3 +51,6 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/24
+
+volumes:
+  certificates:
