@@ -137,3 +137,5 @@ model_functions/language/deepspeech/librispeech_pretrained_v2.pth
 *.tar.gz
 model_functions/generative/2/
 model_functions/generative/3/
+cloudflare.ini
+logs/

@@ -3,8 +3,9 @@ services:
   webappp:
     build: ./flask/
     image: eu.gcr.io/ml-webpage-264418/webapp:latest
+    restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "443:443"
     container_name: webappp
     networks:
       app:
@@ -13,10 +14,21 @@ services:
       - generative
       - language
       - deepspeech
+      - certbot
     volumes:
-      - certificates:/certs
+      - certconf:/etc/letsencrypt
+      - certwww:/var/www/certbot
 
   certbot:
+    image: certbot/dns-cloudflare
+
+    restart: unless-stopped
+    volumes:
+      - certconf:/etc/letsencrypt
+      - certwww:/var/www/certbot
+      - ./logs:/var/log/letsencrypt
+      - /Users/timgretler/projects/ml-webpage/ml-webpage/cloudflare.ini:/cloudflare.ini
+    command: certonly --dns-cloudflare  --dns-cloudflare-credentials /cloudflare.ini --email exaple@gmail.com --server https://acme-v02.api.letsencrypt.org/directory -d *.example.com
 
   generative:
     build: ./model_functions/generative
@@ -53,4 +65,5 @@ networks:
         - subnet: 172.20.0.0/24
 
 volumes:
-  certificates:
+  certconf:
+  certwww:
