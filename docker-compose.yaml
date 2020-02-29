@@ -5,7 +5,7 @@ services:
     image: eu.gcr.io/ml-webpage-264418/webapp:latest
     restart: unless-stopped
     ports:
-      - "443:443"
+      - "500:443"
     container_name: webappp
     networks:
       app:
@@ -16,19 +16,30 @@ services:
       - deepspeech
       - certbot
     volumes:
-      - certconf:/etc/letsencrypt
-      - certwww:/var/www/certbot
+      - test:/my_certs
 
   certbot:
-    image: certbot/dns-cloudflare
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - URL=ai-demo.ch
+      - SUBDOMAINS=wildcard,
+      - VALIDATION=dns
+      - DNSPLUGIN=cloudflare #optional
+      - EMAIL=gretler.tim@gmail.com #optional
+      - DHLEVEL=2048
 
-    restart: unless-stopped
     volumes:
-      - certconf:/etc/letsencrypt
-      - certwww:/var/www/certbot
-      - ./logs:/var/log/letsencrypt
-      - /Users/timgretler/projects/ml-webpage/ml-webpage/cloudflare.ini:/cloudflare.ini
-    command: certonly --dns-cloudflare  --dns-cloudflare-credentials /cloudflare.ini --email exaple@gmail.com --server https://acme-v02.api.letsencrypt.org/directory -d *.example.com
+      - test:/config
+    ports:
+      - "443:443"
+      - 80:80
+    restart: unless-stopped
 
   generative:
     build: ./model_functions/generative
@@ -65,5 +76,4 @@ networks:
         - subnet: 172.20.0.0/24
 
 volumes:
-  certconf:
-  certwww:
+  test:
