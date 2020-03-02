@@ -139,4 +139,4 @@ model_functions/generative/2/
 model_functions/generative/3/
 cloudflare.ini
 logs/
-certbot/
+certbot/config/dns-conf/cloudflare.ini
