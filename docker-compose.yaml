@@ -5,7 +5,7 @@ services:
     image: eu.gcr.io/ml-webpage-264418/webapp:latest
     restart: unless-stopped
     ports:
-      - "500:443"
+      - "443:443"
     container_name: webappp
     networks:
       app:
@@ -16,11 +16,13 @@ services:
       - deepspeech
       - certbot
     volumes:
-      - test:/my_certs
+      - certbot:/my_certs
 
   certbot:
-    image: linuxserver/letsencrypt
-    container_name: letsencrypt
+    build: ./certbot/
+    image: eu.gcr.io/ml-webpage-264418/certbot:latest
+    container_name: letsencrypt2
+
     cap_add:
       - NET_ADMIN
     environment:
@@ -28,17 +30,17 @@ services:
       - PGID=1000
       - TZ=Europe/London
       - URL=ai-demo.ch
-      - SUBDOMAINS=wildcard,
+      - SUBDOMAINS=www,
       - VALIDATION=dns
       - DNSPLUGIN=cloudflare #optional
       - EMAIL=gretler.tim@gmail.com #optional
       - DHLEVEL=2048
-
     volumes:
-      - test:/config
+      #- test:/config
+      - certbot:/config
     ports:
-      - "443:443"
-      - 80:80
+      - "500:443"
+      - 501:80
     restart: unless-stopped
 
   generative:
@@ -76,4 +78,4 @@ networks:
         - subnet: 172.20.0.0/24
 
 volumes:
-  test:
+  certbot:

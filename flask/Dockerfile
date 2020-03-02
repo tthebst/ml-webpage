@@ -17,4 +17,5 @@ ADD . /app
 
 
 WORKDIR /app
-CMD exec gunicorn --certfile=/etc/letsencrypt/live/ai-demo.ch/fullchain.pem --keyfile=/etc/letsencrypt/live/ai-demo.ch/privkey.pem --ssl-version=3 --bind 0.0.0.0:443 --workers 1 --threads 2 app:app
+CMD exec gunicorn --ca-certs=/my_certs/etc/letsencrypt/live/ai-demo.ch/fullchain.pem --certfile=/my_certs/etc/letsencrypt/live/ai-demo.ch/cert.pem --keyfile=/my_certs/etc/letsencrypt/live/ai-demo.ch/privkey.pem --ssl-version=3 --bind 0.0.0.0:443 --workers 1 --threads 2 app:app
+#CMD exec gunicorn  --bind 0.0.0.0:443 --workers 1 --threads 2 app:app
