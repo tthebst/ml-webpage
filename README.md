@@ -1,9 +1,9 @@
-
+# ML WEBPAGE
 On this webpage you can explore state-of-the-art deep learning models of different categories.
 
 https://ai-demo.ch
 
-###Architecture
+### Architecture
 
 To deploy the models I used a mix of different tools:
   - Webpage: Run on a cloud compute instance deployed with docker-compose
