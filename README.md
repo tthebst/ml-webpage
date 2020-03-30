@@ -14,3 +14,12 @@ To deploy the models I used a mix of different tools:
   
 
 All the source code is in this repository. 
+
+
+### Note to self
+
+Use following command to run docker compose on container optimized OS on GCP
+
+```
+docker run -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD:/rootfs/$PWD" -w="/rootfs/$PWD" docker/compose:1.24.0 up
+```
