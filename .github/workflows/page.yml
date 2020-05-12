@@ -21,7 +21,7 @@ jobs:
           region: eu-central-1
           tags: latest,${{ github.sha }}
           create_repo: true
-          path: ./flask/
+          path: /github/workspace/flask/
       - uses: kciter/aws-ecr-action@v1
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
