@@ -10,7 +10,7 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code into the Go module directory
+      - name: Check out code
         uses: actions/checkout@v2
       - uses: kciter/aws-ecr-action@v1
         with:
@@ -21,7 +21,7 @@ jobs:
           region: eu-central-1
           tags: latest,${{ github.sha }}
           create_repo: true
-          path: ./flask
+          path: ./flask/
       - uses: kciter/aws-ecr-action@v1
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -31,7 +31,7 @@ jobs:
           region: eu-central-1
           tags: latest,${{ github.sha }}
           create_repo: true
-          path: ./model_functions/object_detection
+          path: ./model_functions/object_detection/
       - uses: kciter/aws-ecr-action@v1
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -41,7 +41,7 @@ jobs:
           region: eu-central-1
           tags: latest,${{ github.sha }}
           create_repo: true
-          path: ./model_functions/generative
+          path: ./model_functions/generative/
       - uses: kciter/aws-ecr-action@v1
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -51,4 +51,4 @@ jobs:
           region: eu-central-1
           tags: latest,${{ github.sha }}
           create_repo: true
-          path: ./model_functions/language/deepspeech
+          path: ./model_functions/language/deepspeech/
