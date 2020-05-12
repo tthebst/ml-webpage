@@ -10,6 +10,8 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
       - uses: kciter/aws-ecr-action@v1
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
