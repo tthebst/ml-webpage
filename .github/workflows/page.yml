@@ -28,6 +28,7 @@ jobs:
           ECR_REPOSITORY: mlweb/webapp
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          aws ecr create-repository --repository-name $ECR_REPOSITORY || true
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./flask
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       - name: Build, tag, and push image to Amazon ECR
@@ -36,6 +37,7 @@ jobs:
           ECR_REPOSITORY: mlweb/objectdetect
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          aws ecr create-repository --repository-name $ECR_REPOSITORY || true
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./model_functions/object_detection/
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       - name: Build, tag, and push image to Amazon ECR
@@ -44,6 +46,7 @@ jobs:
           ECR_REPOSITORY: mlweb/generative
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          aws ecr create-repository --repository-name $ECR_REPOSITORY || true
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./model_functions/generative/
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
       - name: Build, tag, and push image to Amazon ECR
@@ -52,5 +55,6 @@ jobs:
           ECR_REPOSITORY: mlweb/deepspeech
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          aws ecr create-repository --repository-name $ECR_REPOSITORY || true
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./model_functions/language/deepspeech/
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
