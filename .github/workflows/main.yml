@@ -109,7 +109,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   #=========build and push container images===========
-  deploy-cloudfunctions:
+  deploy-cloudfunctions-alexnet:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -125,3 +125,115 @@ jobs:
       - name: deploy function
         run: |
           gcloud functions deploy alexnet --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/alexnet
+  deploy-cloudfunctions-densenet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install gcloud SDK
+        run: |
+          sudo apt-get update && sudo apt-get install google-cloud-sdk
+      - name: Activate Service Account
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
+          sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: deploy function
+        run: |
+          gcloud functions deploy densenet --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/densenet
+  deploy-cloudfunctions-googlenet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install gcloud SDK
+        run: |
+          sudo apt-get update && sudo apt-get install google-cloud-sdk
+      - name: Activate Service Account
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
+          sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: deploy function
+        run: |
+          gcloud functions deploy googlenet --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/googlenet
+  deploy-cloudfunctions-resnet18:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install gcloud SDK
+        run: |
+          sudo apt-get update && sudo apt-get install google-cloud-sdk
+      - name: Activate Service Account
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
+          sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: deploy function
+        run: |
+          gcloud functions deploy resnet18 --runtime python37 --allow-unauthenticated --memory 512 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnet18
+  deploy-cloudfunctions-resnet50:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install gcloud SDK
+        run: |
+          sudo apt-get update && sudo apt-get install google-cloud-sdk
+      - name: Activate Service Account
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
+          sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: deploy function
+        run: |
+          gcloud functions deploy resnet50 --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnet50
+  deploy-cloudfunctions-resnext:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install gcloud SDK
+        run: |
+          sudo apt-get update && sudo apt-get install google-cloud-sdk
+      - name: Activate Service Account
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
+          sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: deploy function
+        run: |
+          gcloud functions deploy resnext --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnext
+  deploy-cloudfunctions-squeeznet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install gcloud SDK
+        run: |
+          sudo apt-get update && sudo apt-get install google-cloud-sdk
+      - name: Activate Service Account
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
+          sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: deploy function
+        run: |
+          gcloud functions deploy squeeznet --runtime python37 --allow-unauthenticated --memory 256 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/squeeznet
+  deploy-cloudfunctions-vgg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install gcloud SDK
+        run: |
+          sudo apt-get update && sudo apt-get install google-cloud-sdk
+      - name: Activate Service Account
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
+          sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: deploy function
+        run: |
+          gcloud functions deploy vgg --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/vgg
