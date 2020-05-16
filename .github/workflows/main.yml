@@ -32,6 +32,13 @@ jobs:
           aws ecr create-repository --repository-name $ECR_REPOSITORY || true
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./flask
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          service: yolo
+          cluster: ml-webpage
+          wait-for-service-stability: true
   build-and-push-object_detection:
     runs-on: ubuntu-latest
     steps:
@@ -109,6 +116,7 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   #=========build and push container images===========
+  #=========deploy glcoud funtions===========
   deploy-cloudfunctions-alexnet:
     runs-on: ubuntu-latest
     steps:
@@ -237,3 +245,5 @@ jobs:
       - name: deploy function
         run: |
           gcloud functions deploy vgg --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/vgg
+
+#=========deploy glcoud funtions===========
