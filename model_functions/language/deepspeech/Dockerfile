@@ -33,4 +33,4 @@ RUN pip install gunicorn
 
 WORKDIR /workspace/deepspeech.pytorch/
 RUN ls
-CMD exec gunicorn  --bind 0.0.0.0:5005 --workers 1 --threads 2 server_deep:app
+CMD exec gunicorn  --bind 0.0.0.0:8080 --workers 1 --threads 2 server_deep:app
