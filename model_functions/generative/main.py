@@ -10,6 +10,7 @@ import servingmodels
 import logging
 from memory_profiler import profile
 import gc
+
 print(__name__)
 app = Flask(__name__)
 
@@ -29,10 +30,12 @@ def gen_module():
 
     pre = time.time()
 
-    module = hub.Module('/generative/2')
+    module = hub.Module("/generative/2")
 
-    inputs = {k: tf.placeholder(v.dtype, v.get_shape().as_list(), k)
-              for k, v in module.get_input_info_dict().items()}
+    inputs = {
+        k: tf.placeholder(v.dtype, v.get_shape().as_list(), k)
+        for k, v in module.get_input_info_dict().items()
+    }
     output = module(inputs)
     gc.collect()
     graph = tf.get_default_graph()
@@ -40,13 +43,13 @@ def gen_module():
     print("graph befor first req", graph)
 
 
-@app.route('/')
+@app.route("/")
 def home():
 
     return "Nothing to see here...."
 
 
-@app.route('/pgan', methods=["GET"])
+@app.route("/pgan", methods=["GET"])
 def pgan():
 
     try:
@@ -55,15 +58,13 @@ def pgan():
 
     except Exception as e:
         print(e)
-        headers = {
-            'Access-Control-Allow-Origin': '*'
-        }
+        headers = {"Access-Control-Allow-Origin": "*"}
         print("error")
         return ("ERROR OCCURED", 404, headers)
     return to_send
 
 
-@app.route('/dcgan', methods=["GET"])
+@app.route("/dcgan", methods=["GET"])
 def dcgan():
 
     try:
@@ -71,15 +72,13 @@ def dcgan():
 
     except Exception as e:
         print(e)
-        headers = {
-            'Access-Control-Allow-Origin': '*'
-        }
+        headers = {"Access-Control-Allow-Origin": "*"}
         print("error")
         return ("ERROR OCCURED", 404, headers)
     return to_send
 
 
-@app.route('/biggan', methods=["GET", "POST"])
+@app.route("/biggan", methods=["GET", "POST"])
 @profile
 def biggan():
 
@@ -87,20 +86,18 @@ def biggan():
         print("got biggan request", request)
         to_pred = json.loads(request.data.decode())
         gc.collect()
-        to_send = servingmodels.biggan(request, output, inputs, graph, to_pred=int(to_pred['a']))
+        to_send = servingmodels.biggan(request, output, inputs, graph, to_pred=int(to_pred["a"]))
     except Exception as e:
 
         logger.exception(e)
-        headers = {
-            'Access-Control-Allow-Origin': '*'
-        }
+        headers = {"Access-Control-Allow-Origin": "*"}
         print("error")
         return ("ERROR OCCURED", 404, headers)
 
     return to_send
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
     logger = logging.getLogger(__name__)
-    app.run(port=5002, debug=True, host="0.0.0.0",  threaded=True)
+    app.run(port=5002, debug=True, host="0.0.0.0", threaded=True)

@@ -8,114 +8,25 @@ on:
 
 jobs:
   #=========build and push container images===========
-  build-and-push-webapp:
+  build-and-push-webapp-appengine:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: mlweb/webapp
-          IMAGE_TAG: latest
+      - name: Install gcloud SDK
         run: |
-          aws ecr create-repository --repository-name $ECR_REPOSITORY || true
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./flask
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      - name: Deploy to Amazon ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ./flask/ecs-task-def.json
-          service: yolo
-          cluster: ml-webpage
-          wait-for-service-stability: true
-  build-and-push-object_detection:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      - name: Build, tag, and push image to Amazon ECR
+          sudo apt-get update && sudo apt-get install google-cloud-sdk
+      - name: Activate Service Account
         env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: mlweb/objectdetect
-          IMAGE_TAG: ${{ github.sha }}
+          GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
         run: |
-          aws ecr create-repository --repository-name $ECR_REPOSITORY || true
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./model_functions/object_detection/
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-  build-and-push-generative:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: mlweb/generative
-          IMAGE_TAG: ${{ github.sha }}
+          echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
+          sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: deploy function
         run: |
-          aws s3 cp s3://ml-webpage123/2.tar.gz ./model_functions/generative/2.tar.gz 
+          gsutil cp https://storage.cloud.google.com/ml-webpage/2.tar.gz ./model_functions/generative/2.tar.gz 
           tar -xf ./model_functions/generative/2.tar.gz -C ./model_functions/generative
-          aws ecr create-repository --repository-name $ECR_REPOSITORY || true
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./model_functions/generative/
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-  build-and-push-deepspeech:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: mlweb/deepspeech
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          aws s3 cp s3://ml-webpage123/librispeech_pretrained_v2.pth ./model_functions/language/deepspeech/librispeech_pretrained_v2.pth
-          aws ecr create-repository --repository-name $ECR_REPOSITORY || true
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG ./model_functions/language/deepspeech/
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-  #=========build and push container images===========
+          gcloud app create --project=ml-webpage-264418 ./model_functions/generative/
   #=========deploy glcoud funtions===========
   deploy-cloudfunctions-alexnet:
     runs-on: ubuntu-latest
