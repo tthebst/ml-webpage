@@ -24,7 +24,7 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: deploy function
         run: |
-          gsutil cp https://storage.cloud.google.com/ml-webpage/2.tar.gz ./model_functions/generative/2.tar.gz 
+          gsutil cp gs://ml-webpage/2.tar.gz ./model_functions/generative/2.tar.gz 
           tar -xf ./model_functions/generative/2.tar.gz -C ./model_functions/generative
           gcloud app create --project=ml-webpage-264418 ./model_functions/generative/
   #=========deploy glcoud funtions===========
