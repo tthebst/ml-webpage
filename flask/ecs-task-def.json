@@ -64,49 +64,12 @@
         "EC2",
         "FARGATE"
     ],
-    "taskDefinitionArn": "arn:aws:ecs:eu-central-1:517131341861:task-definition/webapp:1",
     "family": "webapp",
-    "requiresAttributes": [
-        {
-            "targetId": null,
-            "targetType": null,
-            "value": null,
-            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
-        },
-        {
-            "targetId": null,
-            "targetType": null,
-            "value": null,
-            "name": "ecs.capability.execution-role-awslogs"
-        },
-        {
-            "targetId": null,
-            "targetType": null,
-            "value": null,
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-        },
-        {
-            "targetId": null,
-            "targetType": null,
-            "value": null,
-            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-        },
-        {
-            "targetId": null,
-            "targetType": null,
-            "value": null,
-            "name": "ecs.capability.task-eni"
-        }
-    ],
     "pidMode": null,
     "requiresCompatibilities": [
         "FARGATE"
     ],
     "networkMode": "awsvpc",
     "cpu": "256",
-    "revision": 1,
-    "status": "ACTIVE",
-    "inferenceAccelerators": null,
-    "proxyConfiguration": null,
     "volumes": []
 }
