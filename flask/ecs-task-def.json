@@ -5,23 +5,6 @@
         {
             "dnsSearchDomains": null,
             "environmentFiles": null,
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "secretOptions": null,
-                "options": {
-                    "awslogs-group": "/ecs/webapp",
-                    "awslogs-region": "eu-central-1",
-                    "awslogs-stream-prefix": "ecs"
-                }
-            },
-            "entryPoint": null,
-            "portMappings": [
-                {
-                    "hostPort": 443,
-                    "protocol": "tcp",
-                    "containerPort": 443
-                }
-            ],
             "command": null,
             "linuxParameters": null,
             "cpu": 0,
