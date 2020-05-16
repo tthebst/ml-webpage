@@ -35,7 +35,7 @@ jobs:
       - name: Deploy to Amazon ECS
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
-          task-definition: task-definition.json
+          task-definition: ./flask/ecs-task-def.json
           service: yolo
           cluster: ml-webpage
           wait-for-service-stability: true
