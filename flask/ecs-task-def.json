@@ -54,7 +54,7 @@
             "dockerLabels": null,
             "systemControls": null,
             "privileged": null,
-            "name": "mlweb/webapp"
+            "name": "webapp"
         }
     ],
     "placementConstraints": [],
