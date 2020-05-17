@@ -22,6 +22,7 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: push to GCR && deploy to cloudrun
         run: |
+          gcloud auth configure-docker
           gsutil cp gs://ml-webpage/librispeech_pretrained_v2.pth ./model_functions/language/deepspeech/librispeech_pretrained_v2.pth
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/language/deepspeech
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
@@ -47,6 +48,7 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: push to GCR && deploy to cloudrun
         run: |
+          gcloud auth configure-docker
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/language/
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
           gcloud run deploy language --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
@@ -71,6 +73,7 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: push to GCR && deploy to cloudrun
         run: |
+          gcloud auth configure-docker
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/generative/
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
           gcloud run deploy generative --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
@@ -97,7 +100,7 @@ jobs:
         run: |
           gsutil cp gs://ml-webpage/2.tar.gz ./model_functions/generative/2.tar.gz 
           tar -xf ./model_functions/generative/2.tar.gz -C ./model_functions/generative
-          echo $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
+          gcloud auth configure-docker
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/object_detection/
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
           gcloud run deploy object-detect --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
@@ -123,8 +126,8 @@ jobs:
       - name: push to GCR && deploy to cloudrun
         run: |
           gcloud auth configure-docker
-          docker build -t "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG" ./flask
-          docker push "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG"
+          docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./flask
+          docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
           gcloud run deploy webapp --image "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 512Mi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
