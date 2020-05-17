@@ -130,7 +130,6 @@ dmypy.json
 
 
 #my ignroes
-flask/static/images
 .DS_Store
 
 model_functions/language/deepspeech/librispeech_pretrained_v2.pth
