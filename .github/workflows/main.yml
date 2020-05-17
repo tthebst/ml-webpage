@@ -122,6 +122,7 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: push to GCR && deploy to cloudrun
         run: |
+          gcloud auth configure-docker
           docker build -t "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG" ./flask
           docker push "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG"
           gcloud run deploy webapp --image "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 512Mi --max-instances 2
