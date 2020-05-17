@@ -32,7 +32,7 @@ jobs:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: deepspeech
           IMAGE_TAG: latest
-          PROCECT_ID: ${{ secrets.PROJECT_ID }}
+          PROCECT_ID: ml-webpage-264418
   language-deploy:
     runs-on: ubuntu-latest
     steps:
@@ -56,7 +56,7 @@ jobs:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: language
           IMAGE_TAG: latest
-          PROCECT_ID: ${{ secrets.PROJECT_ID }}
+          PROCECT_ID: ml-webpage-264418
   generative-deploy:
     runs-on: ubuntu-latest
     steps:
@@ -80,7 +80,7 @@ jobs:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: generative
           IMAGE_TAG: latest
-          PROCECT_ID: ${{ secrets.PROJECT_ID }}
+          PROCECT_ID: ml-webpage-264418
   object-detect-deploy:
     runs-on: ubuntu-latest
     steps:
@@ -99,14 +99,15 @@ jobs:
         run: |
           gsutil cp gs://ml-webpage/2.tar.gz ./model_functions/generative/2.tar.gz 
           tar -xf ./model_functions/generative/2.tar.gz -C ./model_functions/generative
-          echo $GCR_REGISTRY/${{ secrets.PROJECT_ID }}/$GCR_REPOSITORY:$IMAGE_TAG
-          docker build -t $GCR_REGISTRY/${{ secrets.PROJECT_ID }}$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/object_detection/
-          docker push $GCR_REGISTRY/${{ secrets.PROJECT_ID }}/$GCR_REPOSITORY:$IMAGE_TAG
-          gcloud run deploy object-detect --image $GCR_REGISTRY/${{ secrets.PROJECT_ID }}/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
+          echo $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
+          docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/object_detection/
+          docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
+          gcloud run deploy object-detect --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: object_detection
           IMAGE_TAG: latest
+          PROCECT_ID: ml-webpage-264418
   webapp-deploy:
     runs-on: ubuntu-latest
     steps:
@@ -125,12 +126,12 @@ jobs:
         run: |
           docker build -t "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG" ./flask
           docker push "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG"
-          gcloud run deploy webapp --image "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG" --allow-unauthenticated --memory 512Mi --max-instances 2
+          gcloud run deploy webapp --image "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 512Mi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: webapp
           IMAGE_TAG: latest
-          PROCECT_ID: ${{ secrets.PROJECT_ID }}
+          PROCECT_ID: ml-webpage-264418
   #=========deploy glcoud funtions===========
   deploy-cloudfunctions-alexnet:
     runs-on: ubuntu-latest
