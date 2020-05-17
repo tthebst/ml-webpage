@@ -128,7 +128,7 @@ jobs:
           gcloud auth configure-docker
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./flask
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
-          gcloud run deploy webapp --image "$GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 512Mi --max-instances 2
+          gcloud run deploy webapp --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 512Mi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: webapp
