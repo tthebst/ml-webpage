@@ -26,7 +26,7 @@ jobs:
           gsutil cp gs://ml-webpage/librispeech_pretrained_v2.pth ./model_functions/language/deepspeech/librispeech_pretrained_v2.pth
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/language/deepspeech
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
-          gcloud run deploy deepspeech --project ml-webpage-264418 --platform managed --region europe-west4 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
+          gcloud run deploy deepspeech --project ml-webpage-264418 --platform managed --region europe-west4 --port 8080 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: deepspeech
@@ -52,7 +52,7 @@ jobs:
           gcloud auth configure-docker
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/language/
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
-          gcloud run deploy language --project ml-webpage-264418 --platform managed --region europe-west4 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
+          gcloud run deploy language --project ml-webpage-264418 --platform managed --region europe-west4 --port 8080 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: language
@@ -77,7 +77,7 @@ jobs:
           gcloud auth configure-docker
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/generative/
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
-          gcloud run deploy generative --project ml-webpage-264418 --platform managed --region europe-west4 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
+          gcloud run deploy generative --project ml-webpage-264418 --platform managed --region europe-west4 --port 8080 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: generative
@@ -104,7 +104,7 @@ jobs:
           gcloud auth configure-docker
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/object_detection/
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
-          gcloud run deploy object-detect --project ml-webpage-264418 --platform managed --region europe-west4 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
+          gcloud run deploy object-detect --project ml-webpage-264418 --platform managed --region europe-west4 --port 8080 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 2Gi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: object_detection
@@ -129,7 +129,7 @@ jobs:
           gcloud auth configure-docker
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./flask
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
-          gcloud run deploy webapp --project ml-webpage-264418 --platform managed --region europe-west4 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 512Mi --max-instances 2
+          gcloud run deploy webapp --project ml-webpage-264418 --platform managed --region europe-west4 --port 8080 --image $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG --allow-unauthenticated --memory 512Mi --max-instances 2
         env:
           GCR_REGISTRY: eu.gcr.io
           GCR_REPOSITORY: webapp
