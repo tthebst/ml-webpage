@@ -175,7 +175,7 @@ jobs:
         run: |
           pip install wheel
           pip install pylint
-          pip list -v
+          find / --name pylint
           pylint ./model_functions/classification/densenet/main.py
       - name: deploy function
         run: |
