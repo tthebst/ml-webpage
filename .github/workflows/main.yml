@@ -153,7 +153,7 @@ jobs:
       - name: check syntax
         run: |
           pip install wheel
-          pip3 install pylint
+          pip install pylint
           pylint ./model_functions/classification/alexnet/main.py
       - name: deploy function
         run: |
@@ -174,7 +174,7 @@ jobs:
       - name: check syntax
         run: |
           pip install wheel
-          pip3 install pylint
+          pip install pylint
           pylint ./model_functions/classification/densenet/main.py
       - name: deploy function
         run: |
@@ -195,7 +195,7 @@ jobs:
       - name: check syntax
         run: |
           pip install wheel
-          pip3 install pylint
+          pip install pylint
           pylint ./model_functions/classification/googlenet/main.py
       - name: deploy function
         run: |
@@ -216,7 +216,7 @@ jobs:
       - name: check syntax
         run: |
           pip install wheel
-          pip3 install pylint
+          pip install pylint
           pylint ./model_functions/classification/resnet18/main.py
       - name: deploy function
         run: |
@@ -237,7 +237,7 @@ jobs:
       - name: check syntax
         run: |
           pip install wheel
-          pip3 install pylint
+          pip install pylint
           pylint ./model_functions/classification/resnet50/main.py
       - name: deploy function
         run: |
@@ -257,7 +257,7 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: check syntax
         run: |
-          pip3 install pylint
+          pip install pylint
           pylint ./model_functions/classification/resnext/main.py
       - name: deploy function
         run: |
@@ -278,7 +278,7 @@ jobs:
       - name: check syntax
         run: |
           pip install wheel
-          pip3 install pylint
+          pip install pylint
           pylint ./model_functions/classification/squeeznet/main.py
       - name: deploy function
         run: |
@@ -299,7 +299,7 @@ jobs:
       - name: check syntax
         run: |
           pip install wheel
-          pip3 install pylint
+          pip install pylint
           pylint ./model_functions/classification/vgg/main.py
       - name: deploy function
         run: |
