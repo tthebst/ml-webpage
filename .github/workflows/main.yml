@@ -143,7 +143,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install gcloud SDK
         run: |
-          sudo apt-get update && sudo apt-get install google-cloud-sdk
+          sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools
       - name: Activate Service Account
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
@@ -163,7 +163,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install gcloud SDK
         run: |
-          sudo apt-get update && sudo apt-get install google-cloud-sdk
+          sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools
       - name: Activate Service Account
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
@@ -183,7 +183,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install gcloud SDK
         run: |
-          sudo apt-get update && sudo apt-get install google-cloud-sdk
+          sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools
       - name: Activate Service Account
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
@@ -203,7 +203,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install gcloud SDK
         run: |
-          sudo apt-get update && sudo apt-get install google-cloud-sdk
+          sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools
       - name: Activate Service Account
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
@@ -223,7 +223,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install gcloud SDK
         run: |
-          sudo apt-get update && sudo apt-get install google-cloud-sdk
+          sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools
       - name: Activate Service Account
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
@@ -243,7 +243,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install gcloud SDK
         run: |
-          sudo apt-get update && sudo apt-get install google-cloud-sdk
+          sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools
       - name: Activate Service Account
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
@@ -263,7 +263,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install gcloud SDK
         run: |
-          sudo apt-get update && sudo apt-get install google-cloud-sdk
+          sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools
       - name: Activate Service Account
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
@@ -283,7 +283,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install gcloud SDK
         run: |
-          sudo apt-get update && sudo apt-get install google-cloud-sdk
+          sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools
       - name: Activate Service Account
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
