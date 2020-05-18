@@ -34,6 +34,7 @@ jobs:
           PROCECT_ID: ml-webpage-264418
   language-deploy:
     runs-on: ubuntu-latest
+    needs: deepspeech-deploy
     steps:
       - name: Check out code
         uses: actions/checkout@v2

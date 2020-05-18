@@ -23,5 +23,5 @@ ADD . /language
 EXPOSE 5002
 RUN pip3 install gunicorn
 WORKDIR /language
-CMD exec gunicorn  --bind 0.0.0.0:5003 --workers 1 --threads 2 app_language:app
+CMD exec gunicorn  --bind 0.0.0.0:8080 --workers 1 --threads 2 app_language:app
 #CMD [ "python3","/language/app_language.py" ]
