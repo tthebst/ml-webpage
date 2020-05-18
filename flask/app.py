@@ -87,7 +87,9 @@ def transformer():
     # print(container)
     # ip_add = container.attrs['NetworkSettings']['IPAddress']
     # print(ip_add)
-    resp = requests.post("http://172.20.0.3:5003/en2de", data=request.data, verify=False)
+    resp = requests.post(
+        "https://language-ch3s33ctwq-ez.a.run.app/en2de", data=request.data, verify=False
+    )
 
     return (resp.text, resp.status_code, resp.headers.items())
 
@@ -100,7 +102,7 @@ def deepspeech():
     # container = client.containers.get("language")
     # ip_add = container.attrs['NetworkSettings']['IPAddress']
     resp = requests.post(
-        "https://deepspeech-ch3s33ctwq-ez.a.run.app/deepspeech_transcribe",
+        "https://language-ch3s33ctwq-ez.a.run.app/deepspeech_transcribe",
         data=request.data,
         files=request.files,
         verify=False,
