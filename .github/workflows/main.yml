@@ -76,6 +76,7 @@ jobs:
         run: |
           gcloud auth configure-docker
           gsutil cp gs://ml-webpage/2.tar.gz ./model_functions/generative/2.tar.gz 
+          mkdir ./model_functions/generative/2
           tar -xf ./model_functions/generative/2.tar.gz -C ./model_functions/generative/2
           docker build -t $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG ./model_functions/generative/
           docker push $GCR_REGISTRY/$PROCECT_ID/$GCR_REPOSITORY:$IMAGE_TAG
@@ -149,6 +150,10 @@ jobs:
         run: |
           echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: check syntax
+        run: |
+          pip3 install pylint
+          pylint ./model_functions/classification/alexnet/main.py
       - name: deploy function
         run: |
           gcloud functions deploy alexnet --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/alexnet
@@ -165,6 +170,10 @@ jobs:
         run: |
           echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: check syntax
+        run: |
+          pip3 install pylint
+          pylint ./model_functions/classification/densenet/main.py
       - name: deploy function
         run: |
           gcloud functions deploy densenet --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/densenet
@@ -181,6 +190,10 @@ jobs:
         run: |
           echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: check syntax
+        run: |
+          pip3 install pylint
+          pylint ./model_functions/classification/googlenet/main.py
       - name: deploy function
         run: |
           gcloud functions deploy googlenet --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/googlenet
@@ -197,6 +210,10 @@ jobs:
         run: |
           echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: check syntax
+        run: |
+          pip3 install pylint
+          pylint ./model_functions/classification/resnet18/main.py
       - name: deploy function
         run: |
           gcloud functions deploy resnet18 --runtime python37 --allow-unauthenticated --memory 512 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnet18
@@ -213,6 +230,10 @@ jobs:
         run: |
           echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: check syntax
+        run: |
+          pip3 install pylint
+          pylint ./model_functions/classification/resnet50/main.py
       - name: deploy function
         run: |
           gcloud functions deploy resnet50 --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnet50
@@ -229,6 +250,10 @@ jobs:
         run: |
           echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: check syntax
+        run: |
+          pip3 install pylint
+          pylint ./model_functions/classification/resnext/main.py
       - name: deploy function
         run: |
           gcloud functions deploy resnext --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnext
@@ -245,6 +270,10 @@ jobs:
         run: |
           echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: check syntax
+        run: |
+          pip3 install pylint
+          pylint ./model_functions/classification/squeeznet/main.py
       - name: deploy function
         run: |
           gcloud functions deploy squeeznet --runtime python37 --allow-unauthenticated --memory 256 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/squeeznet
@@ -261,6 +290,10 @@ jobs:
         run: |
           echo "$GCLOUD_AUTH" | base64 --decode > "$HOME"/gcloud.json
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
+      - name: check syntax
+        run: |
+          pip3 install pylint
+          pylint ./model_functions/classification/vgg/main.py
       - name: deploy function
         run: |
           gcloud functions deploy vgg --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/vgg
