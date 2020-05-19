@@ -13,15 +13,13 @@ def hello_world(request):
     """
 
     # imports
-    import pickle as pk
     from flask import jsonify
-    import torchvision.models as models
     from torchvision import transforms
     import urllib.request
     from PIL import Image
     import torch
     import json
-    import requests
+
 
   # download & prepare model if necessary
     global model

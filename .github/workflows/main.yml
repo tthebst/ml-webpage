@@ -141,6 +141,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
       - name: Install gcloud SDK
         run: |
           sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools && sudo apt-get install python3-dev
@@ -152,9 +153,8 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: check syntax
         run: |
-          pip install wheel
           pip install pylint
-          /usr/share/bash-completion/completions/pylint ./model_functions/classification/alexnet/main.py
+          pylint --exit-zero ./model_functions/classification/alexnet/main.py
       - name: deploy function
         run: |
           gcloud functions deploy alexnet --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/alexnet
@@ -162,6 +162,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
       - name: Install gcloud SDK
         run: |
           sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools && sudo apt-get install python3-dev
@@ -173,9 +174,8 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: check syntax
         run: |
-          pip install wheel
           pip install pylint
-          /usr/share/bash-completion/completions/pylint ./model_functions/classification/densenet/main.py
+          pylint --exit-zero ./model_functions/classification/densenet/main.py
       - name: deploy function
         run: |
           gcloud functions deploy densenet --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/densenet
@@ -183,6 +183,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
       - name: Install gcloud SDK
         run: |
           sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools && sudo apt-get install python3-dev
@@ -194,9 +195,8 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: check syntax
         run: |
-          pip install wheel
           pip install pylint
-          /usr/share/bash-completion/completions/pylint ./model_functions/classification/googlenet/main.py
+          pylint --exit-zero ./model_functions/classification/googlenet/main.py
       - name: deploy function
         run: |
           gcloud functions deploy googlenet --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/googlenet
@@ -204,6 +204,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
       - name: Install gcloud SDK
         run: |
           sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools && sudo apt-get install python3-dev
@@ -215,9 +216,8 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: check syntax
         run: |
-          pip install wheel
           pip install pylint
-          /usr/share/bash-completion/completions/pylint ./model_functions/classification/resnet18/main.py
+          pylint --exit-zero ./model_functions/classification/resnet18/main.py
       - name: deploy function
         run: |
           gcloud functions deploy resnet18 --runtime python37 --allow-unauthenticated --memory 512 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnet18
@@ -225,6 +225,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
       - name: Install gcloud SDK
         run: |
           sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools && sudo apt-get install python3-dev
@@ -236,9 +237,8 @@ jobs:
           sh -c "gcloud auth activate-service-account --key-file=$HOME/gcloud.json $*"
       - name: check syntax
         run: |
-          pip install wheel
           pip install pylint
-          /usr/share/bash-completion/completions/pylint ./model_functions/classification/resnet50/main.py
+          pylint --exit-zero ./model_functions/classification/resnet50/main.py
       - name: deploy function
         run: |
           gcloud functions deploy resnet50 --runtime python37 --allow-unauthenticated --memory 1024 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnet50
@@ -246,6 +246,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
       - name: Install gcloud SDK
         run: |
           sudo apt-get update && sudo apt-get install google-cloud-sdk && sudo apt-get install python3-setuptools && sudo apt-get install python3-dev
@@ -258,7 +259,7 @@ jobs:
       - name: check syntax
         run: |
           pip install pylint
-          /usr/share/bash-completion/completions/pylint ./model_functions/classification/resnext/main.py
+          pylint --exit-zero ./model_functions/classification/resnext/main.py
       - name: deploy function
         run: |
           gcloud functions deploy resnext --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/resnext
@@ -300,7 +301,7 @@ jobs:
       - name: check syntax
         run: |
           pip install pylint
-          pylint ./model_functions/classification/vgg/main.py
+          pylint --exit-zero ./model_functions/classification/vgg/main.py
       - name: deploy function
         run: |
           gcloud functions deploy vgg --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/vgg
