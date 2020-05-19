@@ -300,7 +300,7 @@ jobs:
       - name: check syntax
         run: |
           pip install pylint
-          /usr/share/bash-completion/completions/pylint ./model_functions/classification/vgg/main.py
+          pylint ./model_functions/classification/vgg/main.py
       - name: deploy function
         run: |
           gcloud functions deploy vgg --runtime python37 --allow-unauthenticated --memory 2048 --max-instances 3 --project ml-webpage-264418 --service-account github-action@ml-webpage-264418.iam.gserviceaccount.com --source ./model_functions/classification/vgg
