@@ -1,7 +1,7 @@
 # ML WEBPAGE
 On this webpage you can explore state-of-the-art deep learning models of different categories.
 
-https://ai-demo.ch
+https://ai-demo.timgretler.ch
 
 ### Architecture
 
